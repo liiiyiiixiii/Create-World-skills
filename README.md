@@ -71,11 +71,6 @@ The tests cover transparent/background cleanup, `3x4` segmentation, four-directi
 - 断点续跑暂存仅记录本地 SHA-256 指纹和源文件名，不保存图片本身或绝对路径。
 - 两张随附 PNG 参考图均由 `generate_reference_assets.py` 确定性生成，不读取照片、私有游戏素材或网络资源。
 
-## Known limitations / 已知限制
-
-Image generation is nondeterministic. Ambiguous faces, multiple people, severe obstruction, invalid grids, identity drift, or gait failures can cause the Skill to stop and preserve valid staging artifacts for targeted retry. Left-facing art is derived by mirroring right-facing frames, so asymmetric details are mirrored too.
-
-图像生成具有非确定性。人脸不清晰、多人物、严重遮挡、网格错误、身份漂移或步态校验失败时，Skill 会停止并保留有效暂存产物，以便定向重试。左向素材由右向逐帧镜像得到，因此不对称细节也会被镜像。
 
 ## License / 许可
 

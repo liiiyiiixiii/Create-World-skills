@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import shutil
+import tempfile
 from pathlib import Path
 from typing import Iterable
 
@@ -12,9 +14,14 @@ try:
 except ImportError as exc:  # pragma: no cover - exercised only without Pillow
     raise SystemExit("Pillow is required to generate the bundled reference assets.") from exc
 
+import build_character_pack as builder
+
 
 STYLE_BOARD_NAME = "beyond-walls-style-board.png"
 WALK_TEMPLATE_NAME = "walk-layout-template.png"
+README_PREVIEW_NAME = "character-generation-preview.gif"
+PREVIEW_CHARACTER_ID = "anonymous-readme-preview"
+PREVIEW_FRAME_DURATION_MS = 170
 UPSCALE = 4
 
 
@@ -209,6 +216,141 @@ def create_walk_template() -> Image.Image:
     return native.resize((768, 768), Image.Resampling.NEAREST)
 
 
+def _colored_front_or_back_pose(direction: str, phase: str) -> Image.Image:
+    """Draw a colorful anonymous pose while preserving the validated gait geometry."""
+    image = Image.new("RGBA", (48, 64), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    outline = "#24183d"
+    hair = "#3b294f"
+    skin = "#f1b39b"
+    jacket = "#2879bb"
+    jacket_light = "#45c8e8"
+    trousers = "#3c4d78"
+    far_limb = "#2f3157"
+    shoes = "#4a2c28"
+
+    draw.rounded_rectangle((13, 3, 35, 25), radius=6, fill=outline)
+    draw.rounded_rectangle((15, 5, 33, 24), radius=5, fill=skin)
+    if direction == "up":
+        draw.ellipse((14, 3, 34, 21), fill=hair)
+        _rect(draw, (15, 15, 33, 24), hair)
+    else:
+        draw.polygon(
+            [(14, 12), (16, 4), (33, 4), (35, 13), (29, 10), (24, 15), (19, 10)],
+            fill=hair,
+        )
+        _rect(draw, (18, 15, 21, 19), outline)
+        _rect(draw, (27, 15, 30, 19), outline)
+        _rect(draw, (19, 15, 20, 16), "white")
+        _rect(draw, (28, 15, 29, 16), "white")
+    _rect(draw, (17, 24, 31, 43), outline)
+    _rect(draw, (19, 25, 29, 42), jacket)
+    _rect(draw, (20, 26, 22, 38), jacket_light)
+
+    if phase == "a":
+        _rect(draw, (13, 27, 17, 43), jacket_light)
+        _rect(draw, (31, 25, 35, 40), jacket)
+        _rect(draw, (19, 42, 23, 56), far_limb)
+        _rect(draw, (26, 41, 30, 59), trousers)
+        _rect(draw, (26, 57, 34, 61), shoes)
+        _rect(draw, (18, 54, 23, 58), shoes)
+    elif phase == "b":
+        _rect(draw, (13, 25, 17, 40), jacket)
+        _rect(draw, (31, 27, 35, 43), jacket_light)
+        _rect(draw, (18, 41, 22, 59), trousers)
+        _rect(draw, (25, 42, 29, 56), far_limb)
+        _rect(draw, (14, 57, 22, 61), shoes)
+        _rect(draw, (25, 54, 30, 58), shoes)
+    else:
+        _rect(draw, (13, 26, 17, 42), jacket)
+        _rect(draw, (31, 26, 35, 42), jacket)
+        _rect(draw, (19, 42, 23, 58), trousers)
+        _rect(draw, (25, 42, 29, 58), far_limb)
+        _rect(draw, (17, 57, 23, 61), shoes)
+        _rect(draw, (25, 57, 31, 61), shoes)
+    return image
+
+
+def _colored_right_pose(phase: str) -> Image.Image:
+    image = Image.new("RGBA", (48, 64), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    outline = "#24183d"
+    hair = "#3b294f"
+    skin = "#f1b39b"
+    jacket = "#2879bb"
+    jacket_light = "#45c8e8"
+    trousers = "#3c4d78"
+    far_limb = "#2f3157"
+    shoes = "#4a2c28"
+
+    draw.rounded_rectangle((13, 4, 34, 25), radius=6, fill=outline)
+    draw.rounded_rectangle((16, 6, 33, 23), radius=5, fill=skin)
+    draw.polygon(
+        [(13, 15), (15, 5), (30, 4), (35, 11), (30, 15), (25, 12), (20, 18)],
+        fill=hair,
+    )
+    _rect(draw, (31, 14, 36, 17), skin)
+    _rect(draw, (29, 13, 32, 17), outline)
+    _rect(draw, (20, 24, 31, 43), outline)
+    _rect(draw, (22, 25, 29, 42), jacket)
+    _rect(draw, (23, 26, 24, 38), jacket_light)
+
+    if phase == "a":
+        _rect(draw, (17, 28, 21, 42), jacket)
+        _rect(draw, (17, 39, 22, 44), skin)
+        draw.polygon([(22, 41), (28, 41), (35, 56), (32, 59), (26, 52)], fill=trousers)
+        _rect(draw, (31, 56, 39, 61), shoes)
+        draw.polygon([(21, 41), (25, 43), (19, 56), (14, 57), (18, 48)], fill=far_limb)
+        _rect(draw, (12, 55, 20, 60), shoes)
+    elif phase == "b":
+        _rect(draw, (30, 27, 34, 41), jacket_light)
+        _rect(draw, (31, 38, 36, 44), skin)
+        draw.polygon([(22, 41), (27, 42), (20, 56), (15, 58), (18, 49)], fill=trousers)
+        _rect(draw, (12, 56, 21, 61), shoes)
+        draw.polygon([(25, 42), (29, 41), (35, 55), (38, 57), (31, 58)], fill=far_limb)
+        _rect(draw, (32, 55, 40, 60), shoes)
+    else:
+        _rect(draw, (18, 27, 22, 42), jacket)
+        _rect(draw, (22, 42, 26, 58), trousers)
+        _rect(draw, (27, 42, 30, 58), far_limb)
+        _rect(draw, (19, 57, 27, 61), shoes)
+        _rect(draw, (26, 57, 33, 61), shoes)
+    return image
+
+
+def create_preview_production_sheet() -> Image.Image:
+    """Create the anonymous colored 3x4 sheet consumed by the production builder."""
+    native = Image.new("RGB", (48 * 4, 64 * 3), "white")
+    phases = ("neutral", "a", "neutral", "b")
+    for row, direction in enumerate(("down", "up", "right")):
+        for column, phase in enumerate(phases):
+            pose = (
+                _colored_right_pose(phase)
+                if direction == "right"
+                else _colored_front_or_back_pose(direction, phase)
+            )
+            native.paste(pose.convert("RGB"), (column * 48, row * 64), pose.getchannel("A"))
+    return native.resize((768, 768), Image.Resampling.NEAREST)
+
+
+def _generate_readme_preview(destination: Path) -> Path:
+    """Run the real pack builder and publish only its four-direction overview GIF."""
+    with tempfile.TemporaryDirectory(prefix="character-generation-preview-") as temp:
+        temp_root = Path(temp)
+        production_sheet = temp_root / "production-sheet.png"
+        create_preview_production_sheet().save(production_sheet, format="PNG", optimize=True)
+        pack = builder.build_character_pack(
+            character_id=PREVIEW_CHARACTER_ID,
+            production_sheet_path=production_sheet,
+            output_dir=temp_root / "output",
+            frame_duration_ms=PREVIEW_FRAME_DURATION_MS,
+        )
+        overview = pack / "animations" / f"{PREVIEW_CHARACTER_ID}_walk_overview.gif"
+        preview_path = destination / README_PREVIEW_NAME
+        shutil.copyfile(overview, preview_path)
+        return preview_path
+
+
 def generate_assets(output_dir: str | Path) -> dict[str, Path]:
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
@@ -221,6 +363,7 @@ def generate_assets(output_dir: str | Path) -> dict[str, Path]:
         path = destination / name
         image.save(path, format="PNG", optimize=True)
         paths[name] = path
+    paths[README_PREVIEW_NAME] = _generate_readme_preview(destination)
     return paths
 
 

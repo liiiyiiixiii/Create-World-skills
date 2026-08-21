@@ -1,127 +1,148 @@
 # Character Generation Skill / 角色游戏化 Skill
 
-Convert one recognizable front-facing person photo into a reusable Create World bright-chibi 2D pixel-character pack. The Skill generates three views, four-direction walk sheets, transparent animations, portable metadata, and deterministic QA results without modifying game code.
+[← 返回 Create World Skills 总目录](../../README.md)
+
+**状态：可用 / Status: Available**
 
 将一张清晰可辨的单人正面照片转换为可复用的 Create World 明亮 Q 版 2D 像素角色素材包。Skill 会生成三视图、四方向行走精灵表、透明动画、可移植元数据和确定性 QA 报告，不修改游戏代码。
 
-## What it produces / 输出内容
+Convert one recognizable front-facing person photo into a reusable Create World bright-chibi 2D pixel-character pack with three views, four-direction walk sheets, transparent animations, portable metadata, and deterministic QA results.
 
-The default package uses `48x64` cells, four frames per direction, and `170ms` per frame:
+## 输入要求 / Input
 
-```text
-<character-id>/
-|-- masters/                 cleaned high-resolution source sheets
-|-- sprites/png/             three-view and four-direction PNG sheets
-|-- sprites/webp/            lossless WebP direction sheets
-|-- animations/              down/up/right/left APNG and overview GIF
-|-- character.json           portable schema-versioned manifest
-`-- qa-report.json           background, layout, palette, motion, and animation QA
-```
+- 一张只包含一个清晰人物的正面照片；支持头像或全身照。
+- 人脸应可辨认，不能严重遮挡；多人物或无法判断身份时停止生成。
+- 缺失的体型与服装信息会根据照片中可见内容保守补全。
+
+Provide one recognizable front-facing person photo. Headshots and full-body photos are supported; ambiguous, severely obstructed, or multi-person images are rejected.
+
+## 输出内容 / Output
 
 默认素材包使用 `48x64` 单元格、每方向 4 帧、每帧 `170ms`。左向动作由右向逐帧镜像生成，三视图顺序为正面、背面、右侧面。
 
-## Requirements / 依赖
+```text
+<character-id>/
+|-- masters/                 清理后的高清母版
+|-- sprites/png/             三视图与四方向 PNG 精灵表
+|-- sprites/webp/            无损 WebP 方向精灵表
+|-- animations/              down/up/right/left APNG 与总览 GIF
+|-- character.json           版本化、可移植素材清单
+`-- qa-report.json           背景、布局、色板、动作与动画 QA
+```
 
-- Codex with built-in image generation
-- Python 3.10 or newer
+The default package uses `48x64` cells, four frames per direction, and `170ms` per frame.
+
+<p align="center">
+  <img src="assets/character-generation-preview.gif" width="320" alt="Character Generation 匿名四向像素角色动画预览">
+</p>
+
+上图是由公开脚本确定性绘制、再通过本 Skill 真实打包流程生成的匿名演示，不读取真人照片。它同时展示 `down`、`up`、`right`、`left` 四个方向；实际角色会根据用户提供的照片生成。
+
+The preview is an anonymous programmatic demonstration produced by the real pack builder. It uses no person photo; actual characters are generated from the user's input photo.
+
+## 依赖与安装 / Requirements and Installation
+
+- 支持内置图像生成能力的 Codex
+- Python 3.10 或更高版本
 - `Pillow>=10,<13`
 
-Install the runtime dependency from the repository root:
+从仓库根目录安装运行依赖：
 
 ```shell
 python -m pip install -r skills/character-generation/requirements.txt
 ```
 
-## Install / 安装 Skill
-
-Copy or link this directory to the Codex Skills directory while keeping the folder name `character-generation`:
+将本目录复制或链接到 Codex Skills 目录，并保持文件夹名为 `character-generation`：
 
 ```text
 $CODEX_HOME/skills/character-generation
 ```
 
-When `CODEX_HOME` is unset, the usual location is `~/.codex/skills/character-generation`.
+未设置 `CODEX_HOME` 时，常见位置为 `~/.codex/skills/character-generation`。
 
-将本目录复制或链接到 Codex Skills 目录，并保持文件夹名称为 `character-generation`。未设置 `CODEX_HOME` 时，常见路径是 `~/.codex/skills/character-generation`。
+Install Pillow from the repository requirements file, then copy or link this directory into the Codex Skills directory as `character-generation`.
 
-## Usage / 调用
+## 调用方法 / Usage
 
-Attach or provide one front-facing photo, then invoke:
-
-```text
-$character-generation <front-facing photo>
-```
+附加或提供一张正面人物照片，然后调用：
 
 ```text
 $character-generation <正面人物照片>
 ```
 
-Optional parameters:
+可选参数：
 
-| Parameter | Default | Purpose |
+| 参数 | 默认值 | 用途 |
 |---|---:|---|
-| `character_id` | derived from filename | Portable output identifier |
-| `output_dir` | `./output/character-generation/` | Package destination root |
-| `cell_size` | `48x64` | Target sprite cell size |
-| `frame_duration` | `170` | Animation frame duration in milliseconds |
-| `generation_mode` | `balanced` | Speed/retry strategy: `balanced`, `fast`, or `quality` |
+| `character_id` | 从文件名推导 | 可移植的输出标识符 |
+| `output_dir` | `./output/character-generation/` | 素材包输出根目录 |
+| `cell_size` | `48x64` | 目标精灵单元格尺寸 |
+| `frame_duration` | `170` | 动画每帧时长，单位为毫秒 |
+| `generation_mode` | `balanced` | 速度与补生成策略 |
 
-`balanced` normally requests one `3x4` production sheet and regenerates only failed directions. `fast` stops after the first invalid generation. `quality` uses separate masters and generates direction sheets concurrently.
+生成模式：
 
-## Generation and QA / 生成与验收
+- `balanced`：默认只请求一张 `3x4` 生产总表，仅补生成校验失败的方向。
+- `fast`：只生成一次，首次校验失败即停止。
+- `quality`：三视图与动作母版分开生成，三个动作方向并行执行。
 
-The production sheet has three rows (`down`, `up`, `right`) and four columns (`neutral`, `gait-A`, `neutral`, `gait-B`). The builder then:
+Optional parameters are `character_id`, `output_dir`, `cell_size`, `frame_duration`, and `generation_mode` (`balanced`, `fast`, or `quality`).
 
-- removes supported white, checkerboard, or alpha backgrounds;
-- separates and normalizes figures to a shared foot baseline;
-- makes the first and third frames exactly identical;
-- verifies that front/back action shoes switch screen sides;
-- verifies that right-profile foreground and far legs exchange gait phase;
-- mirrors the accepted right-facing frames to produce left-facing art;
-- exports binary transparency, a shared palette of at most 64 colors, animations, metadata, and QA.
+## 生成与 QA / Generation and QA
 
-If the grid, identity, direction, clipping, background confidence, or leg phase cannot be validated, the workflow stops rather than silently publishing damaged assets. In `balanced` mode, valid rows remain available for one targeted supplement round.
+生产总表包含三行 `down`、`up`、`right` 和四列 `neutral`、`gait-A`、`neutral`、`gait-B`。构建器会确定性地：
 
-## Privacy and reference assets / 隐私与参考素材
+- 清理支持的白底、棋盘格或 Alpha 背景；
+- 分离人物，并按统一脚底基线归一化；
+- 将第一帧精确复制为第三帧；
+- 检查正面与背面的动作鞋是否在画面左右两侧交替；
+- 检查右侧面的前景腿与远景腿是否交换步态相位；
+- 镜像已通过的右向帧生成左向素材；
+- 输出二值透明、最多 64 色的共享色板、动画、元数据和 QA 报告。
 
-- The input photo is never copied into the final package or this repository.
-- Final JSON files contain only relative artifact paths, never the photo's absolute path.
-- Resumable local staging stores the photo filename and SHA-256 fingerprint, not the photo itself.
-- The two bundled PNG references are anonymous and generated deterministically by `scripts/generate_reference_assets.py` without photos, private game assets, network access, or model training.
-- “Learning the style” means reference-board and prompt conditioning; it is not model fine-tuning.
+如果网格、身份、方向、裁切、背景置信度或腿部相位无法通过验收，流程会停止，而不会静默发布损坏素材。`balanced` 模式会保留有效行，并允许一轮定向补生成。
+
+The builder validates layout, transparency, identity consistency, palette limits, animation structure, and deterministic alternating-leg phases before publishing a pack.
+
+## 隐私与参考素材 / Privacy and Reference Assets
 
 - 输入照片不会被复制到最终素材包或本仓库。
 - 最终 JSON 只记录相对素材路径，不记录照片绝对路径。
 - 本地断点续跑仅保存照片文件名和 SHA-256 指纹，不保存照片本身。
-- 两张 PNG 参考图由 `scripts/generate_reference_assets.py` 匿名、确定性生成，不读取照片、私有游戏素材或网络资源，也不涉及模型微调。
+- 两张随附 PNG 参考图和四向 GIF 预览由 `scripts/generate_reference_assets.py` 匿名、确定性生成，不读取照片、私有游戏素材或网络资源，也不涉及模型微调。
+- 本仓库的 MIT License 不会自动应用于用户照片或基于用户材料生成的输出。
 
-## Development and tests / 开发与测试
+Input photos are not bundled with the Skill or copied into final packs. The bundled visual references are anonymous, reproducible, and generated without private assets or network access.
 
-Run the complete regression suite from the repository root:
+## 开发与测试 / Development and Tests
+
+从仓库根目录运行完整回归测试：
 
 ```shell
 python -m unittest discover -s skills/character-generation/scripts -p "test_*.py" -v
 ```
 
-Rebuild the anonymous references in a temporary directory and compare them with the bundled assets:
+在临时目录重新生成匿名参考素材：
 
 ```shell
 python skills/character-generation/scripts/generate_reference_assets.py --output-dir <temporary-directory>
 ```
 
-Validate the Skill structure with Codex's `skill-creator/scripts/quick_validate.py` when that system utility is available.
+系统中存在 `skill-creator/scripts/quick_validate.py` 时，使用它验证 Skill 结构。
 
-Technical details are maintained in [the generation workflow](references/generation-workflow.md) and [the pack contract](references/pack-contract.md). Codex loads [SKILL.md](SKILL.md) as the actual Skill entrypoint.
+技术细节见[生成工作流](references/generation-workflow.md)和[素材包契约](references/pack-contract.md)。Codex 实际加载的入口是 [SKILL.md](SKILL.md)。
 
-## Known limitations / 已知限制
+## 已知限制 / Known Limitations
 
-- Image generation is nondeterministic and may require a targeted retry.
-- A headshot requires conservative inference for unseen clothing and body shape.
-- Left-facing frames mirror asymmetric clothing and accessories.
-- The Skill produces an independent asset package; engine registration and game-code integration are outside its scope.
+- 图像生成具有非确定性，可能需要一次定向重试。
+- 头像照片需要保守推断不可见的服装和体型。
+- 左向帧会镜像不对称服装与配饰。
+- Skill 只生成独立素材包，不负责游戏引擎注册或代码集成。
 
-## License / 许可
+Image generation is nondeterministic, headshots require conservative inference, asymmetric details are mirrored for left-facing frames, and engine integration remains outside this Skill's scope.
 
-The Skill's code, documentation, and programmatically generated images are licensed under the repository's [MIT License](../../LICENSE).
+## 许可 / License
 
-本 Skill 的代码、文档和程序化生成图片采用仓库根目录的 [MIT License](../../LICENSE)。
+本 Skill 的代码、文档和匿名程序化参考素材采用仓库根目录的 [MIT License](../../LICENSE)。用户提供的材料及基于其生成的输出不自动纳入该许可。
+
+The Skill's repository code, documentation, and anonymous programmatic reference assets are licensed under the [MIT License](../../LICENSE); user-provided materials and derived outputs are not automatically relicensed.

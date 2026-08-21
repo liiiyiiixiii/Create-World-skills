@@ -338,6 +338,32 @@ class CharacterPackBuilderTests(unittest.TestCase):
                         name,
                     )
 
+            preview_name = reference_assets.README_PREVIEW_NAME
+            self.assertIn(preview_name, generated)
+            with (
+                Image.open(committed / preview_name) as expected,
+                Image.open(generated[preview_name]) as actual,
+            ):
+                self.assertEqual(expected.size, (384, 512))
+                self.assertEqual(actual.size, (384, 512))
+                self.assertEqual(expected.n_frames, 4)
+                self.assertEqual(actual.n_frames, 4)
+                for frame_index in range(4):
+                    expected.seek(frame_index)
+                    actual.seek(frame_index)
+                    self.assertEqual(expected.info.get("duration"), 170)
+                    self.assertEqual(actual.info.get("duration"), 170)
+                    expected_frame = expected.convert("RGBA")
+                    actual_frame = actual.convert("RGBA")
+                    self.assertIsNone(
+                        ImageChops.difference(expected_frame, actual_frame).getbbox(),
+                        f"{preview_name} frame {frame_index}",
+                    )
+                    alpha = actual_frame.getchannel("A")
+                    self.assertEqual(alpha.getextrema(), (0, 255))
+                    binary_alpha = alpha.point(lambda value: 255 if value else 0)
+                    self.assertIsNone(ImageChops.difference(alpha, binary_alpha).getbbox())
+
     def test_swapped_action_frame_order_is_rejected(self) -> None:
         for direction in builder.GENERATED_DIRECTIONS:
             frames = normalized_template_frames(direction)

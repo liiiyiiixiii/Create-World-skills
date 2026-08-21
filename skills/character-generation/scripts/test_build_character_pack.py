@@ -338,31 +338,60 @@ class CharacterPackBuilderTests(unittest.TestCase):
                         name,
                     )
 
-            preview_name = reference_assets.README_PREVIEW_NAME
-            self.assertIn(preview_name, generated)
+            showcase_source = reference_assets.SHOWCASE_SOURCE_NAME
+            self.assertIn(showcase_source, generated)
             with (
-                Image.open(committed / preview_name) as expected,
-                Image.open(generated[preview_name]) as actual,
+                Image.open(committed / showcase_source) as expected,
+                Image.open(generated[showcase_source]) as actual,
             ):
-                self.assertEqual(expected.size, (384, 512))
-                self.assertEqual(actual.size, (384, 512))
-                self.assertEqual(expected.n_frames, 4)
-                self.assertEqual(actual.n_frames, 4)
-                for frame_index in range(4):
-                    expected.seek(frame_index)
-                    actual.seek(frame_index)
-                    self.assertEqual(expected.info.get("duration"), 170)
-                    self.assertEqual(actual.info.get("duration"), 170)
-                    expected_frame = expected.convert("RGBA")
-                    actual_frame = actual.convert("RGBA")
+                self.assertEqual(expected.mode, "RGBA")
+                self.assertEqual(actual.mode, "RGBA")
+                self.assertEqual(expected.size, (768, 768))
+                self.assertEqual(actual.size, (768, 768))
+                self.assertIsNone(ImageChops.difference(expected, actual).getbbox())
+
+            preview_sizes = {
+                reference_assets.README_PREVIEW_NAME: (384, 512),
+                **{
+                    name: (192, 256)
+                    for name in reference_assets.showcase_preview.DIRECTION_NAMES.values()
+                },
+            }
+            for preview_name, expected_size in preview_sizes.items():
+                self.assertIn(preview_name, generated)
+                with (
+                    Image.open(committed / preview_name) as expected,
+                    Image.open(generated[preview_name]) as actual,
+                ):
+                    self.assertEqual(expected.size, expected_size)
+                    self.assertEqual(actual.size, expected_size)
+                    self.assertEqual(expected.n_frames, 4)
+                    self.assertEqual(actual.n_frames, 4)
+                    actual_frames: list[Image.Image] = []
+                    for frame_index in range(4):
+                        expected.seek(frame_index)
+                        actual.seek(frame_index)
+                        self.assertEqual(expected.info.get("duration"), 170)
+                        self.assertEqual(actual.info.get("duration"), 170)
+                        expected_frame = expected.convert("RGBA")
+                        actual_frame = actual.convert("RGBA")
+                        actual_frames.append(actual_frame.copy())
+                        self.assertIsNone(
+                            ImageChops.difference(expected_frame, actual_frame).getbbox(),
+                            f"{preview_name} frame {frame_index}",
+                        )
+                        alpha = actual_frame.getchannel("A")
+                        self.assertEqual(alpha.getextrema(), (0, 255))
+                        binary_alpha = alpha.point(lambda value: 255 if value else 0)
+                        self.assertIsNone(ImageChops.difference(alpha, binary_alpha).getbbox())
                     self.assertIsNone(
-                        ImageChops.difference(expected_frame, actual_frame).getbbox(),
-                        f"{preview_name} frame {frame_index}",
+                        ImageChops.difference(actual_frames[0], actual_frames[2]).getbbox(),
+                        f"{preview_name} neutral frames",
                     )
-                    alpha = actual_frame.getchannel("A")
-                    self.assertEqual(alpha.getextrema(), (0, 255))
-                    binary_alpha = alpha.point(lambda value: 255 if value else 0)
-                    self.assertIsNone(ImageChops.difference(alpha, binary_alpha).getbbox())
+                    self.assertIsNotNone(
+                        ImageChops.difference(actual_frames[1], actual_frames[3]).getbbox(),
+                        f"{preview_name} gait phases",
+                    )
 
     def test_swapped_action_frame_order_is_rejected(self) -> None:
         for direction in builder.GENERATED_DIRECTIONS:

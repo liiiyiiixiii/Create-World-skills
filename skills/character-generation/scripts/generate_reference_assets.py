@@ -15,11 +15,13 @@ except ImportError as exc:  # pragma: no cover - exercised only without Pillow
     raise SystemExit("Pillow is required to generate the bundled reference assets.") from exc
 
 import build_character_pack as builder
+import build_showcase_preview as showcase_preview
 
 
 STYLE_BOARD_NAME = "beyond-walls-style-board.png"
 WALK_TEMPLATE_NAME = "walk-layout-template.png"
-README_PREVIEW_NAME = "character-generation-preview.gif"
+SHOWCASE_SOURCE_NAME = "character-generation-showcase-source.png"
+README_PREVIEW_NAME = showcase_preview.OVERVIEW_NAME
 PREVIEW_CHARACTER_ID = "anonymous-readme-preview"
 PREVIEW_FRAME_DURATION_MS = 170
 UPSCALE = 4
@@ -333,8 +335,8 @@ def create_preview_production_sheet() -> Image.Image:
     return native.resize((768, 768), Image.Resampling.NEAREST)
 
 
-def _generate_readme_preview(destination: Path) -> Path:
-    """Run the real pack builder and publish only its four-direction overview GIF."""
+def _generate_anonymous_preview(destination: Path) -> dict[str, Path]:
+    """Build the anonymous fallback used when the showcase sheet is unavailable."""
     with tempfile.TemporaryDirectory(prefix="character-generation-preview-") as temp:
         temp_root = Path(temp)
         production_sheet = temp_root / "production-sheet.png"
@@ -348,7 +350,23 @@ def _generate_readme_preview(destination: Path) -> Path:
         overview = pack / "animations" / f"{PREVIEW_CHARACTER_ID}_walk_overview.gif"
         preview_path = destination / README_PREVIEW_NAME
         shutil.copyfile(overview, preview_path)
-        return preview_path
+        return {"overview": preview_path}
+
+
+def _generate_readme_previews(destination: Path) -> dict[str, Path]:
+    """Regenerate the public directional GIFs from the bundled showcase sheet."""
+    source = Path(__file__).resolve().parents[1] / "assets" / SHOWCASE_SOURCE_NAME
+    if not source.is_file():
+        return _generate_anonymous_preview(destination)
+    canonical_source = destination / SHOWCASE_SOURCE_NAME
+    canonical = showcase_preview.canonicalize_showcase_sheet(source)
+    canonical.save(canonical_source, format="PNG", optimize=True, compress_level=9)
+    previews = showcase_preview.build_showcase_preview(
+        canonical_source,
+        destination,
+        frame_duration_ms=PREVIEW_FRAME_DURATION_MS,
+    )
+    return {"source": canonical_source, **previews}
 
 
 def generate_assets(output_dir: str | Path) -> dict[str, Path]:
@@ -363,7 +381,8 @@ def generate_assets(output_dir: str | Path) -> dict[str, Path]:
         path = destination / name
         image.save(path, format="PNG", optimize=True)
         paths[name] = path
-    paths[README_PREVIEW_NAME] = _generate_readme_preview(destination)
+    for preview_path in _generate_readme_previews(destination).values():
+        paths[preview_path.name] = preview_path
     return paths
 
 

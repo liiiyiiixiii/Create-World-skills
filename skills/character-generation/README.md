@@ -36,9 +36,11 @@ The default package uses `48x64` cells, four frames per direction, and `170ms` p
   <img src="assets/character-generation-preview.gif" width="320" alt="Character Generation 匿名四向像素角色动画预览">
 </p>
 
-上图是由公开脚本确定性绘制、再通过本 Skill 真实打包流程生成的匿名演示，不读取真人照片。它同时展示 `down`、`up`、`right`、`left` 四个方向；实际角色会根据用户提供的照片生成。
+上图由本 Skill 输出的示例精灵表通过公开脚本确定性打包。脚本分别生成向前、向后、向右、向左四个透明 GIF，再合成为四方向总览；仓库不包含真人照片。实际角色会根据用户提供的照片生成。
 
-The preview is an anonymous programmatic demonstration produced by the real pack builder. It uses no person photo; actual characters are generated from the user's input photo.
+独立方向预览位于 `assets/character-generation-preview-forward.gif`、`-backward.gif`、`-right.gif` 和 `-left.gif`；首页使用 `assets/character-generation-preview.gif` 四方向总览。
+
+The preview is deterministically packed from a showcase sprite sheet into four directional GIFs and a combined overview. No person photo is stored in the repository; actual characters are generated from the user's input photo.
 
 ## 依赖与安装 / Requirements and Installation
 
@@ -109,7 +111,7 @@ The builder validates layout, transparency, identity consistency, palette limits
 - 输入照片不会被复制到最终素材包或本仓库。
 - 最终 JSON 只记录相对素材路径，不记录照片绝对路径。
 - 本地断点续跑仅保存照片文件名和 SHA-256 指纹，不保存照片本身。
-- 两张随附 PNG 参考图和四向 GIF 预览由 `scripts/generate_reference_assets.py` 匿名、确定性生成，不读取照片、私有游戏素材或网络资源，也不涉及模型微调。
+- 两张随附 PNG 参考图由 `scripts/generate_reference_assets.py` 匿名、确定性绘制；四向 GIF 由 `scripts/build_showcase_preview.py` 从仓库内的示例精灵表确定性生成。所有公开素材均不读取或保存真人照片、私有游戏素材或网络资源，也不涉及模型微调。
 - 本仓库的 MIT License 不会自动应用于用户照片或基于用户材料生成的输出。
 
 Input photos are not bundled with the Skill or copied into final packs. The bundled visual references are anonymous, reproducible, and generated without private assets or network access.

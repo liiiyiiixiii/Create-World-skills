@@ -31,9 +31,9 @@ The two capability tracks are currently independent. Character Generation produc
 $character-generation <正面人物照片>
 ```
 
-预览是使用公开脚本确定性绘制并通过真实打包流程生成的匿名演示，不读取真人照片；实际角色会依据用户提供的照片生成。查看 [Character Generation 独立说明](skills/character-generation/README.md)了解输入要求、参数、输出和限制。
+预览使用 Character Generation 输出的示例精灵表，并由公开脚本确定性生成前、后、左、右四个 GIF 和四方向总览。仓库不包含真人照片；实际角色会依据用户提供的照片生成。查看 [Character Generation 独立说明](skills/character-generation/README.md)了解输入要求、参数、输出和限制。
 
-**One front-facing photo → turnaround views, four-direction sprite sheets, animations, and QA.** The preview is an anonymous programmatic demo; generated characters are based on the user's own photo.
+**One front-facing photo → turnaround views, four-direction sprite sheets, animations, and QA.** The preview is deterministically packed from a showcase sprite sheet; generated characters are based on the user's own photo.
 
 ## 快速开始 / Quick Start
 

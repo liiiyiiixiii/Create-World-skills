@@ -1,0 +1,4 @@
+interface:
+  display_name: "Character Generation Skill"
+  short_description: "从正面照片生成 Create World 明亮 Q 版四向像素角色"
+  default_prompt: "使用 $character-generation 以 balanced 模式将这张正面人物照片生成 Create World 明亮 Q 版四向像素角色素材包。"

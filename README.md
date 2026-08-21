@@ -31,7 +31,7 @@ Create World Skills 按照从原作理解、改编设计、资产生成，到游
 
 The roadmap runs from source understanding and adaptation design through asset creation, assembly, state management, and review. The Skills remain modular; only Character Generation is currently published, while the other entries are in development.
 
-## Character Generation 精选 / Featured Skill
+## Character Generation Skill
 
 <p align="center">
   <img src="skills/character-generation/assets/character-generation-preview.gif" width="320" alt="Character Generation 匿名四向像素角色动画预览">

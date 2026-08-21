@@ -19,6 +19,22 @@ Create World Skills is an open-source collection of Codex Skills distilled from 
 
 The two capability tracks are currently independent. Character Generation produces character assets; Content Understanding structures narrative material and is not yet published in this repository.
 
+## Character Generation 精选 / Featured Skill
+
+<p align="center">
+  <img src="skills/character-generation/assets/character-generation-preview.gif" width="320" alt="Character Generation 匿名四向像素角色动画预览">
+</p>
+
+**单人正面照片 → 三视图、四向精灵表、动画和 QA 报告。** Character Generation 把角色设计约束、动作生成、透明背景处理、精灵打包和质量检查收拢到一个可复用 Skill 中。
+
+```text
+$character-generation <正面人物照片>
+```
+
+预览是使用公开脚本确定性绘制并通过真实打包流程生成的匿名演示，不读取真人照片；实际角色会依据用户提供的照片生成。查看 [Character Generation 独立说明](skills/character-generation/README.md)了解输入要求、参数、输出和限制。
+
+**One front-facing photo → turnaround views, four-direction sprite sheets, animations, and QA.** The preview is an anonymous programmatic demo; generated characters are based on the user's own photo.
+
 ## 快速开始 / Quick Start
 
 1. 克隆仓库：
@@ -51,6 +67,12 @@ The two capability tracks are currently independent. Character Generation produc
 具体依赖、参数、输出和限制以各 Skill 文件夹内的 README 为准。
 
 Clone the repository, install the selected Skill's dependencies, copy or link its folder into the Codex Skills directory, and invoke it with `$skill-name`. See each Skill's README for its complete contract.
+
+## 项目起源 / Origin
+
+Create World Skills 起源于 2D 游戏《高墙之外》的开发实践。制作过程中，叙事整理、角色游戏化、素材规范和质量检查不断重复出现；这个仓库把其中可复用的部分沉淀为边界清晰、能够独立安装和测试的 Skills。它们从一款游戏中生长出来，但不只服务于这一款游戏。
+
+Create World Skills grew out of recurring production problems in *Beyond the Wall*: structuring narrative material, turning people into playable characters, normalizing assets, and checking quality. The resulting Skills are reusable beyond the original game.
 
 ## 设计原则 / Principles
 

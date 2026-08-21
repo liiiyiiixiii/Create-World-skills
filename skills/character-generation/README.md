@@ -32,6 +32,14 @@ Provide one recognizable front-facing person photo. Headshots and full-body phot
 
 The default package uses `48x64` cells, four frames per direction, and `170ms` per frame.
 
+<p align="center">
+  <img src="assets/character-generation-preview.gif" width="320" alt="Character Generation 匿名四向像素角色动画预览">
+</p>
+
+上图是由公开脚本确定性绘制、再通过本 Skill 真实打包流程生成的匿名演示，不读取真人照片。它同时展示 `down`、`up`、`right`、`left` 四个方向；实际角色会根据用户提供的照片生成。
+
+The preview is an anonymous programmatic demonstration produced by the real pack builder. It uses no person photo; actual characters are generated from the user's input photo.
+
 ## 依赖与安装 / Requirements and Installation
 
 - 支持内置图像生成能力的 Codex
@@ -101,7 +109,7 @@ The builder validates layout, transparency, identity consistency, palette limits
 - 输入照片不会被复制到最终素材包或本仓库。
 - 最终 JSON 只记录相对素材路径，不记录照片绝对路径。
 - 本地断点续跑仅保存照片文件名和 SHA-256 指纹，不保存照片本身。
-- 两张随附 PNG 参考图由 `scripts/generate_reference_assets.py` 匿名、确定性生成，不读取照片、私有游戏素材或网络资源，也不涉及模型微调。
+- 两张随附 PNG 参考图和四向 GIF 预览由 `scripts/generate_reference_assets.py` 匿名、确定性生成，不读取照片、私有游戏素材或网络资源，也不涉及模型微调。
 - 本仓库的 MIT License 不会自动应用于用户照片或基于用户材料生成的输出。
 
 Input photos are not bundled with the Skill or copied into final packs. The bundled visual references are anonymous, reproducible, and generated without private assets or network access.

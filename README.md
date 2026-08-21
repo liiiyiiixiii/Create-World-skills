@@ -8,16 +8,28 @@ Create World Skills 是一套面向创作者与开发者的开源 Codex Skills�
 
 Create World Skills is an open-source collection of Codex Skills distilled from real 2D game production. Each Skill packages one reusable creative workflow and can be installed, used, documented, and tested independently.
 
-## Skill 目录 / Skill Catalog
+## Skill 体系 / Skill System
 
-| Skill | 状态 | 输入 | 输出 |
-|---|---|---|---|
-| [Character Generation](skills/character-generation/README.md) | **可用 / Available** | 单人正面照片 | 三视图、四向像素角色精灵表、动画与 QA 报告 |
-| `Content Understanding` | **开发中 / In development** | 剧本、字幕、小说等叙事材料 | 可追溯的因果主干、精选片段以及 Markdown/YAML 结构稿 |
+Create World Skills 按照从原作理解、改编设计、资产生成，到游戏组装、状态管理与最终验收的顺序组织。每个 Skill 保持模块化，可以独立开发和使用；未来可以连接为完整工作流，但目前只有 Character Generation 已在本仓库正式发布，不能将下表理解为已经可用的自动化流水线。
 
-当前两条能力线相互独立：Character Generation 负责角色素材，Content Understanding 负责叙事结构。本仓库暂不宣称它们已经组成自动化游戏生成流水线，也不承诺开发中 Skill 的发布日期。
+| 序号 | Skill | 状态 | 主要职责 |
+|---:|---|---|---|
+| 1 | `Content Understanding` | **开发中 / In development** | 原作整体结构化 |
+| 2 | `Game Adaptation` | **开发中 / In development** | 确定游戏类型、玩家身份、核心体验 |
+| 3 | `Art Direction` | **开发中 / In development** | 确定整体视觉风格 |
+| 4 | `Main Flow` | **开发中 / In development** | 确定完整游戏主流程 |
+| 5 | `Narrative Branch` | **开发中 / In development** | 设计支线、选择与结局 |
+| 6 | `Easter Egg` | **开发中 / In development** | 设计彩蛋与隐藏内容 |
+| 7 | `Gameplay Design` | **开发中 / In development** | 设计核心玩法与玩法循环 |
+| 8 | `Scene Generation` | **开发中 / In development** | 生成游戏场景和空间 |
+| 9 | [Character Generation](skills/character-generation/README.md) | **可用 / Available** | 角色游戏化并生成角色动作 |
+| 10 | `Interaction Generation` | **开发中 / In development** | 把剧情事件转成可操作行为 |
+| 11 | `Dialogue` | **开发中 / In development** | 生成 NPC 对话 |
+| 12 | `Game Assembly` | **开发中 / In development** | 组合场景、角色与玩法 |
+| 13 | `Game State` | **开发中 / In development** | 管理世界状态 |
+| 14 | `Reviewer` | **开发中 / In development** | 自动测试与一致性检查 |
 
-The two capability tracks are currently independent. Character Generation produces character assets; Content Understanding structures narrative material and is not yet published in this repository.
+The roadmap runs from source understanding and adaptation design through asset creation, assembly, state management, and review. The Skills remain modular; only Character Generation is currently published, while the other entries are in development.
 
 ## Character Generation 精选 / Featured Skill
 
@@ -96,6 +108,14 @@ Create-World-skills/
         |-- README.md
         `-- SKILL.md
 ```
+
+## ⭐ Support / 支持
+
+如果你喜欢这个项目，欢迎点一个 **Star ⭐**。
+
+也欢迎通过 [GitHub Issues](https://github.com/liiiyiiixiii/Create-World-skills/issues) 提交 Bug、建议或体验反馈。
+
+If you find this project useful, please consider giving it a **Star ⭐**. Bug reports, suggestions, and experience feedback are welcome through [GitHub Issues](https://github.com/liiiyiiixiii/Create-World-skills/issues).
 
 ## 许可与内容边界 / License and Content Boundaries
 

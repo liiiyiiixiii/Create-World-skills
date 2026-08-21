@@ -6,11 +6,31 @@ Reusable open-source Skills distilled from building 2D games and interactive wor
 
 ## Skills
 
-### Character Generation / 角色游戏化
+### [Character Generation / 角色游戏化](skills/character-generation/README.md)
 
 `skills/character-generation` converts one recognizable front-facing person photo into a bright chibi 2D pixel-character pack: a three-view turnaround, four-direction transparent walk sheets, APNG animations, an overview GIF, metadata, and QA results.
 
 `skills/character-generation` 将一张清晰的单人正面照片转换为明亮 Q 版 2D 像素角色素材包，包括三视图、四方向透明行走精灵表、APNG 动画、总览 GIF、元数据和 QA 报告。
+
+## Repository structure / 仓库结构
+
+```text
+Create-World-skills/
+|-- README.md                         Skill 体系总览与目录
+|-- LICENSE
+`-- skills/
+    |-- character-generation/
+    |   |-- README.md                 面向使用者的独立说明
+    |   |-- SKILL.md                  Codex Skill 入口与执行规范
+    |   `-- agents, assets, references, scripts
+    `-- <future-skill>/
+        |-- README.md
+        `-- SKILL.md
+```
+
+Each folder under `skills/` is an independently documented Skill. The root README is the catalog for the whole system; a Skill's own README explains installation, inputs, outputs, limits, and development, while `SKILL.md` remains the concise executable instruction entrypoint for Codex.
+
+`skills/` 下的每个文件夹都是一个可独立理解的 Skill。根 README 是整个体系的目录；各 Skill 自己的 README 负责安装、输入输出、限制与开发说明，`SKILL.md` 则保持为供 Codex 加载的精简执行入口。
 
 ## Install / 安装
 
@@ -70,7 +90,6 @@ The tests cover transparent/background cleanup, `3x4` segmentation, four-directi
 - Skill 不内置用户照片，不将照片复制进最终素材包，也不会在最终元数据中保存照片绝对路径。
 - 断点续跑暂存仅记录本地 SHA-256 指纹和源文件名，不保存图片本身或绝对路径。
 - 两张随附 PNG 参考图均由 `generate_reference_assets.py` 确定性生成，不读取照片、私有游戏素材或网络资源。
-
 
 ## License / 许可
 

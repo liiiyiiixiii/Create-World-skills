@@ -14,22 +14,22 @@ Create World Skills 按照从原作理解、改编设计、资产生成，到游
 
 | 序号 | Skill | 状态 | 主要职责 |
 |---:|---|---|---|
-| 1 | `Content Understanding` | **开发中 / In development** | 原作整体结构化 |
-| 2 | `Game Adaptation` | **开发中 / In development** | 确定游戏类型、玩家身份、核心体验 |
-| 3 | `Art Direction` | **开发中 / In development** | 确定整体视觉风格 |
+| 1 | `Content Understanding` | **即将上线 / Coming soon** | 原作整体结构化 |
+| 2 | `Game Adaptation` | **即将上线 / Coming soon** | 确定游戏类型、玩家身份、核心体验 |
+| 3 | `Art Direction` | **即将上线 / Coming soon** | 确定整体视觉风格 |
 | 4 | `Main Flow` | **开发中 / In development** | 确定完整游戏主流程 |
 | 5 | `Narrative Branch` | **开发中 / In development** | 设计支线、选择与结局 |
-| 6 | `Easter Egg` | **开发中 / In development** | 设计彩蛋与隐藏内容 |
+| 6 | `Easter Egg` | **即将上线 / Coming soon** | 设计彩蛋与隐藏内容 |
 | 7 | `Gameplay Design` | **开发中 / In development** | 设计核心玩法与玩法循环 |
-| 8 | `Scene Generation` | **开发中 / In development** | 生成游戏场景和空间 |
+| 8 | `Scene Generation` | **即将上线 / Coming soon** | 生成游戏场景和空间 |
 | 9 | [Character Generation](skills/character-generation/README.md) | **可用 / Available** | 角色游戏化并生成角色动作 |
 | 10 | `Interaction Generation` | **开发中 / In development** | 把剧情事件转成可操作行为 |
-| 11 | `Dialogue` | **开发中 / In development** | 生成 NPC 对话 |
+| 11 | `Dialogue` | **即将上线 / Coming soon** | 生成 NPC 对话 |
 | 12 | `Game Assembly` | **开发中 / In development** | 组合场景、角色与玩法 |
 | 13 | `Game State` | **开发中 / In development** | 管理世界状态 |
 | 14 | `Reviewer` | **开发中 / In development** | 自动测试与一致性检查 |
 
-The roadmap runs from source understanding and adaptation design through asset creation, assembly, state management, and review. The Skills remain modular; only Character Generation is currently published, while the other entries are in development.
+The roadmap runs from source understanding and adaptation design through asset creation, assembly, state management, and review. The Skills remain modular; only Character Generation is currently published, while the other entries are not yet published.
 
 ## Character Generation Skill
 

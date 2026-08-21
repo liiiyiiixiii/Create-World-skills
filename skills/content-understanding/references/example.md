@@ -31,7 +31,7 @@ coverage:
         notes: ""
     notes: []
   target_fidelity:
-    target_medium: "play"
+    target_medium: "short_story"
     target_version: "完整原创梗概"
     status: "verified"
     basis_source_ids: ["SRC-001"]

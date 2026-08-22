@@ -1,0 +1,5 @@
+interface:
+  display_name: "Content Understanding Skill"
+  short_description: "将电影、剧本和小说等线性叙事拆成可追溯结构，并附逐节点轻量玩法提示"
+  default_prompt: "使用 $content-understanding 将我提供的叙事材料整理为可审阅结构，并为每个事件节点补充简短玩法提示。"
+

@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://create-world.local/content-understanding/structure-v2.schema.json",
+  "title": "Content Understanding Structure 2.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "metadata",
+    "work",
+    "sources",
+    "coverage",
+    "overview",
+    "segments",
+    "nodes",
+    "causal_links",
+    "notable_fragments",
+    "characters",
+    "story_elements",
+    "setup_payoffs",
+    "gaps",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["skill_version", "generated_at", "revision", "generation_method", "revision_history"],
+      "properties": {
+        "skill_version": {"type": "string", "minLength": 1},
+        "generated_at": {"type": "string", "format": "date-time"},
+        "revision": {"type": "integer", "minimum": 1},
+        "generation_method": {"type": "string", "minLength": 1},
+        "revision_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["revision", "generated_at", "summary", "affected_ids"],
+            "properties": {
+              "revision": {"type": "integer", "minimum": 1},
+              "generated_at": {"type": "string", "format": "date-time"},
+              "summary": {"type": "string"},
+              "affected_ids": {"type": "array", "items": {"type": "string"}}
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "work": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["title", "slug", "kind", "language", "analysis_status", "scope"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "slug": {"type": "string", "minLength": 1},
+        "kind": {"type": "string"},
+        "language": {"type": "string"},
+        "analysis_status": {"enum": ["draft", "revised", "final"]},
+        "scope": {"type": "string"}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["material_coverage", "target_fidelity"],
+      "properties": {
+        "material_coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "units", "notes"],
+          "properties": {
+            "status": {"enum": ["complete", "partial"]},
+            "units": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "source_id", "label", "status", "notes"],
+                "properties": {
+                  "id": {"type": "string", "pattern": "^UNIT-[0-9]{3,}$"},
+                  "source_id": {"type": "string", "pattern": "^SRC-[0-9]{3,}$"},
+                  "label": {"type": "string", "minLength": 1},
+                  "status": {"enum": ["pending", "analyzed", "failed"]},
+                  "notes": {"type": "string"}
+                }
+              }
+            },
+            "notes": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "target_fidelity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["target_medium", "target_version", "status", "basis_source_ids", "caveats"],
+          "properties": {
+            "target_medium": {"enum": ["film", "screenplay", "novel", "short_story", "comic", "play", "mixed", "other"]},
+            "target_version": {"type": "string", "minLength": 1},
+            "status": {"enum": ["verified", "partial", "unverified"]},
+            "basis_source_ids": {"type": "array", "items": {"type": "string", "pattern": "^SRC-[0-9]{3,}$"}},
+            "caveats": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "overview": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["premise", "central_question", "initial_state", "final_state", "themes"],
+      "properties": {
+        "premise": {"type": "string"},
+        "central_question": {"type": "object"},
+        "initial_state": {"type": "string"},
+        "final_state": {"type": "string"},
+        "themes": {"type": "array"}
+      }
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "order", "title", "node_ids"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^SEG-[0-9]{3,}$"},
+          "order": {"type": "number"},
+          "title": {"type": "string"},
+          "node_ids": {"type": "array", "items": {"type": "string", "pattern": "^N-[0-9]{3,}$"}}
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/node"}
+    },
+    "causal_links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "from_node_id", "to_node_id", "type", "confidence", "rationale", "basis_refs"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^CL-[0-9]{3,}$"},
+          "from_node_id": {"type": "string", "pattern": "^N-[0-9]{3,}$"},
+          "to_node_id": {"type": "string", "pattern": "^N-[0-9]{3,}$"},
+          "type": {"enum": ["causes", "enables", "motivates", "reveals", "blocks", "pays_off", "contrasts"]},
+          "confidence": {"enum": ["high", "medium", "low"]},
+          "rationale": {"type": "string"},
+          "basis_refs": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}}
+        }
+      }
+    },
+    "notable_fragments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/fragment"}
+    },
+    "characters": {"type": "array", "items": {"$ref": "#/$defs/id_object"}},
+    "story_elements": {"type": "array", "items": {"$ref": "#/$defs/id_object"}},
+    "setup_payoffs": {"type": "array", "items": {"$ref": "#/$defs/id_object"}},
+    "gaps": {"type": "array", "items": {"$ref": "#/$defs/id_object"}},
+    "review": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "facts_to_verify",
+        "inferences_to_review",
+        "notable_fragments_to_review",
+        "adaptation_hints_to_review",
+        "user_locked_fragment_ids",
+        "spine_expansion_reason",
+        "high_priority_expansion_reason",
+        "validation_notes",
+        "revision_notes"
+      ],
+      "properties": {
+        "facts_to_verify": {"type": "array", "items": {"type": "string"}},
+        "inferences_to_review": {"type": "array", "items": {"type": "string"}},
+        "notable_fragments_to_review": {"type": "array", "items": {"type": "string"}},
+        "adaptation_hints_to_review": {"type": "array", "items": {"type": "string"}},
+        "user_locked_fragment_ids": {"type": "array", "items": {"type": "string", "pattern": "^NF-[0-9]{3,}$"}},
+        "spine_expansion_reason": {"type": "string"},
+        "high_priority_expansion_reason": {"type": "string"},
+        "validation_notes": {"type": "array", "items": {"type": "string"}},
+        "revision_notes": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "$defs": {
+    "id_object": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {"id": {"type": "string"}},
+      "additionalProperties": true
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator", "note"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^SRC-[0-9]{3,}$"},
+        "locator": {"type": "string", "minLength": 1},
+        "note": {"type": "string"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["id", "title", "kind", "role", "path_or_url", "locator_scheme", "declared_scope", "notes"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SRC-[0-9]{3,}$"},
+        "title": {"type": "string"},
+        "kind": {"type": "string"},
+        "role": {"enum": ["primary", "secondary"]},
+        "path_or_url": {"type": "string"},
+        "locator_scheme": {"type": "string"},
+        "declared_scope": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "adaptation_hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "priority",
+        "player_action",
+        "experience_goal",
+        "narrative_invariant",
+        "selection_reason",
+        "interaction_shape",
+        "pressure_or_feedback"
+      ],
+      "properties": {
+        "priority": {"enum": ["normal", "high"]},
+        "player_action": {"type": "string", "minLength": 1},
+        "experience_goal": {"type": "string", "minLength": 1},
+        "narrative_invariant": {"type": "string", "minLength": 1},
+        "selection_reason": {"type": "string"},
+        "interaction_shape": {"type": "array", "items": {"type": "string"}},
+        "pressure_or_feedback": {"type": "string"}
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "order",
+        "segment_id",
+        "title",
+        "importance",
+        "summary",
+        "facts",
+        "inferences",
+        "outcome",
+        "state_changes",
+        "narrative_functions",
+        "adaptation_hint",
+        "superseded_by",
+        "parent_node_id"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^N-[0-9]{3,}$"},
+        "order": {"type": "number"},
+        "segment_id": {"type": "string", "pattern": "^SEG-[0-9]{3,}$"},
+        "title": {"type": "string", "minLength": 1},
+        "importance": {"enum": ["spine", "support"]},
+        "summary": {"type": "string"},
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claim", "source_refs"],
+            "properties": {
+              "claim": {"type": "string"},
+              "source_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source_ref"}}
+            },
+            "additionalProperties": true
+          }
+        },
+        "inferences": {"type": "array"},
+        "outcome": {"type": "string"},
+        "state_changes": {"type": "array"},
+        "narrative_functions": {"type": "array", "items": {"type": "string"}},
+        "adaptation_hint": {"$ref": "#/$defs/adaptation_hint"},
+        "superseded_by": {"type": "string"},
+        "parent_node_id": {"type": "string"}
+      }
+    },
+    "fragment": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "order",
+        "segment_id",
+        "title",
+        "summary",
+        "source_refs",
+        "related_node_ids",
+        "reason_tags",
+        "retention_reason",
+        "notability_basis",
+        "external_support_refs",
+        "status",
+        "presentation_hint"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^NF-[0-9]{3,}$"},
+        "order": {"type": "number"},
+        "segment_id": {"type": "string", "pattern": "^SEG-[0-9]{3,}$"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "source_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/source_ref"}},
+        "related_node_ids": {"type": "array", "items": {"type": "string", "pattern": "^N-[0-9]{3,}$"}},
+        "reason_tags": {"type": "array", "items": {"type": "string"}},
+        "retention_reason": {"type": "string"},
+        "notability_basis": {"enum": ["user_marked", "internal_analysis", "external_reception"]},
+        "external_support_refs": {"type": "array", "items": {"$ref": "#/$defs/source_ref"}},
+        "status": {"enum": ["proposed", "locked", "excluded"]},
+        "presentation_hint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["player_involvement", "experience_goal", "covered_by_node_id"],
+          "properties": {
+            "player_involvement": {"type": "string", "minLength": 1},
+            "experience_goal": {"type": "string", "minLength": 1},
+            "covered_by_node_id": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,195 @@
+schema_version: "2.0"
+metadata:
+  skill_version: "2.0.0-beta.1"
+  generated_at: "2026-08-22T12:00:00+08:00"
+  revision: 1
+  generation_method: "test-fixture+deterministic-render"
+  revision_history: []
+work:
+  title: "雾港最后一盏灯"
+  slug: "雾港最后一盏灯"
+  kind: "synopsis"
+  language: "zh-CN"
+  analysis_status: "draft"
+  scope: "完整三段原创梗概"
+sources:
+  - id: "SRC-001"
+    title: "fog-harbor.md"
+    kind: "markdown"
+    role: "primary"
+    path_or_url: "fog-harbor.md"
+    locator_scheme: "lines"
+    declared_scope: "lines 1-3"
+    notes: "原创测试材料"
+coverage:
+  material_coverage:
+    status: "complete"
+    units:
+      - id: "UNIT-001"
+        source_id: "SRC-001"
+        label: "lines 1-3"
+        status: "analyzed"
+        notes: ""
+    notes: []
+  target_fidelity:
+    target_medium: "short_story"
+    target_version: "完整原创梗概"
+    status: "verified"
+    basis_source_ids: ["SRC-001"]
+    caveats: []
+overview:
+  premise: "准备离港的守塔人在风暴中必须先恢复灯塔。"
+  central_question:
+    claim: "林玥能否在履行责任后离开雾港？"
+    confidence: "high"
+    basis_refs:
+      - {source_id: "SRC-001", locator: "lines 1-3", note: "离开、故障与交接"}
+  initial_state: "林玥计划乘末班船离开，仍独自负责灯塔。"
+  final_state: "灯塔恢复并完成交接，林玥次日离开。"
+  themes: []
+segments:
+  - id: "SEG-001"
+    order: 10
+    title: "离开受阻"
+    structural_purpose: "建立目标并制造责任冲突。"
+    node_ids: ["N-001", "N-002"]
+  - id: "SEG-002"
+    order: 20
+    title: "修复与交接"
+    structural_purpose: "完成责任并允许主人公离开。"
+    node_ids: ["N-003"]
+nodes:
+  - id: "N-001"
+    order: 10
+    segment_id: "SEG-001"
+    title: "林玥决定离开"
+    importance: "spine"
+    summary: "林玥持有末班船票和父亲留下的钥匙。"
+    facts:
+      - claim: "林玥准备乘末班船去大陆。"
+        source_refs:
+          - {source_id: "SRC-001", locator: "line 1", note: "船票"}
+    inferences: []
+    outcome: "离开目标和钥匙被建立。"
+    state_changes: []
+    narrative_functions: ["setup"]
+    adaptation_hint:
+      priority: "normal"
+      player_action: "整理行李并检查父亲留下的钥匙。"
+      experience_goal: "让玩家建立离开愿望和未解物件。"
+      narrative_invariant: "林玥必须决定当晚离开，并保留黄铜钥匙。"
+      selection_reason: ""
+      interaction_shape: []
+      pressure_or_feedback: ""
+    superseded_by: ""
+    parent_node_id: ""
+  - id: "N-002"
+    order: 20
+    segment_id: "SEG-001"
+    title: "风暴熄灭灯塔"
+    importance: "support"
+    summary: "传动带断裂，渡船因没有引航而停航。"
+    facts:
+      - claim: "风暴令灯塔熄灭，渡船无法离港。"
+        source_refs:
+          - {source_id: "SRC-001", locator: "line 2", note: "故障与停航"}
+    inferences: []
+    outcome: "林玥必须先恢复灯塔。"
+    state_changes: []
+    narrative_functions: ["inciting", "reversal"]
+    adaptation_hint:
+      priority: "high"
+      player_action: "在风暴中确认故障、寻找线索并决定折返。"
+      experience_goal: "让离开愿望和公共责任形成可操作的时间压力。"
+      narrative_invariant: "渡船必须因灯塔失效而停航，林玥必须折返。"
+      selection_reason: "同时包含信息发现、时间压力和明确行动转向。"
+      interaction_shape: ["检查故障", "赶到码头", "听见停航原因", "折返灯塔"]
+      pressure_or_feedback: "风雨增强、船期逼近，灯光和广播即时反馈航路状态。"
+    superseded_by: ""
+    parent_node_id: ""
+  - id: "N-003"
+    order: 30
+    segment_id: "SEG-002"
+    title: "修复灯塔并完成交接"
+    importance: "spine"
+    summary: "钥匙打开工具柜，林玥恢复灯塔，次日交出钥匙后离开。"
+    facts:
+      - claim: "林玥用钥匙取得维修日志，恢复灯塔并在次日离开。"
+        source_refs:
+          - {source_id: "SRC-001", locator: "line 3", note: "修复与交接"}
+    inferences: []
+    outcome: "航路恢复，责任被承接，林玥离港。"
+    state_changes: []
+    narrative_functions: ["payoff", "resolution"]
+    adaptation_hint:
+      priority: "normal"
+      player_action: "按日志完成临时修复，再把钥匙交给老何。"
+      experience_goal: "让玩家感到离开是履责后的选择，而非逃避。"
+      narrative_invariant: "灯塔必须恢复，林玥完成交接后才能离开。"
+      selection_reason: ""
+      interaction_shape: []
+      pressure_or_feedback: ""
+    superseded_by: ""
+    parent_node_id: ""
+causal_links:
+  - id: "CL-001"
+    from_node_id: "N-001"
+    to_node_id: "N-002"
+    type: "blocks"
+    confidence: "high"
+    rationale: "灯塔故障阻断既定离开计划。"
+    basis_refs:
+      - {source_id: "SRC-001", locator: "lines 1-2", note: "离开与停航"}
+  - id: "CL-002"
+    from_node_id: "N-002"
+    to_node_id: "N-003"
+    type: "motivates"
+    confidence: "high"
+    rationale: "停航迫使林玥折返修灯。"
+    basis_refs:
+      - {source_id: "SRC-001", locator: "lines 2-3", note: "折返与修复"}
+notable_fragments:
+  - id: "NF-001"
+    order: 10
+    segment_id: "SEG-001"
+    title: "雨中鱼市与纸船"
+    summary: "居民在风雨中跳舞，孩子把纸船推入积水。"
+    source_refs:
+      - {source_id: "SRC-001", locator: "line 2", note: "鱼市"}
+    related_node_ids: ["N-002"]
+    reason_tags: ["visual", "atmosphere", "contrast"]
+    retention_reason: "保留居民生活韧性，并与林玥的匆忙形成反差。"
+    notability_basis: "user_marked"
+    external_support_refs: []
+    status: "locked"
+    presentation_hint:
+      player_involvement: "允许玩家短暂停步观察、推一只纸船或继续赶路。"
+      experience_goal: "在时间压力中保留雾港仍然鲜活的生活感。"
+      covered_by_node_id: ""
+characters:
+  - id: "CHR-001"
+    name: "林玥"
+    role: "主人公与守塔人"
+    initial_state: "计划离开雾港。"
+story_elements:
+  - id: "EL-001"
+    name: "黄铜钥匙"
+    type: "object"
+    structural_role: "连接遗留线索、修复和责任交接。"
+setup_payoffs:
+  - id: "SP-001"
+    element_id: "EL-001"
+    status: "resolved"
+    explanation: "钥匙先作为谜团出现，后打开维修资源并完成交接。"
+gaps: []
+review:
+  facts_to_verify: []
+  inferences_to_review: []
+  notable_fragments_to_review: []
+  adaptation_hints_to_review: []
+  user_locked_fragment_ids: ["NF-001"]
+  spine_expansion_reason: "短篇只有三个有效节点，开端与结局均不可省略。"
+  high_priority_expansion_reason: ""
+  validation_notes: []
+  revision_notes: []
+

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://create-world.local/schemas/style-contract-v1.schema.json",
+  "title": "Create World 2D Style Contract 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "revision",
+    "project_slug",
+    "decision_status",
+    "selected_candidate_id",
+    "reference_assets",
+    "style_anchor",
+    "pixel_policy",
+    "palette",
+    "shape_language",
+    "lighting",
+    "camera",
+    "ui",
+    "motion",
+    "negative_rules",
+    "asset_overrides",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "contract_id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*-style-r[0-9]{4}$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "project_slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "decision_status": { "enum": ["player_supported", "creator_selected_unvalidated", "creator_override"] },
+    "selected_candidate_id": { "type": "string", "pattern": "^C-[ABC]$" },
+    "reference_assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "role"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "role": { "const": "selected_composite_board" }
+        }
+      }
+    },
+    "style_anchor": { "$ref": "#/$defs/nonEmptyString" },
+    "pixel_policy": { "$ref": "#/$defs/nonEmptyString" },
+    "palette": { "$ref": "#/$defs/nonEmptyStringList" },
+    "shape_language": { "$ref": "#/$defs/nonEmptyStringList" },
+    "lighting": { "$ref": "#/$defs/nonEmptyStringList" },
+    "camera": { "$ref": "#/$defs/nonEmptyStringList" },
+    "ui": { "$ref": "#/$defs/nonEmptyStringList" },
+    "motion": { "$ref": "#/$defs/nonEmptyStringList" },
+    "negative_rules": { "$ref": "#/$defs/nonEmptyStringList" },
+    "asset_overrides": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/nonEmptyStringList" }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visual_decision", "visual_decision_sha256", "player_analysis", "player_analysis_sha256"],
+      "properties": {
+        "visual_decision": { "type": "string", "minLength": 1 },
+        "visual_decision_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "player_analysis": { "type": ["string", "null"] },
+        "player_analysis_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "nonEmptyStringList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    }
+  }
+}

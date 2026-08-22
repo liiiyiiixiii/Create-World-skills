@@ -1,0 +1,4 @@
+interface:
+  display_name: "Art Direction"
+  short_description: "用同题样板和真实玩家盲测选出可信的 2D 游戏视觉方向"
+  default_prompt: "使用 $art-direction 根据这些叙事材料与游戏约束制作三套公平可比的视觉候选，并准备目标玩家盲测。"

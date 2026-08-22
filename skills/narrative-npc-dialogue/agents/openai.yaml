@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dialogue / 叙事 NPC 对话"
+  short_description: "生成忠于角色、自然可演并能接入游戏状态的 NPC 对话"
+  default_prompt: "使用 $narrative-npc-dialogue 根据这个场景、人物资料和任务状态，写一段可直接接入游戏的 NPC 对话。"

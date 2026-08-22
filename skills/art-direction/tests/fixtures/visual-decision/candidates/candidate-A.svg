@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+  <rect width="640" height="360" fill="#17202b"/>
+  <rect x="12" y="12" width="404" height="220" fill="#34495e" stroke="#e0a458" stroke-width="4"/>
+  <rect x="428" y="12" width="200" height="104" fill="#263545" stroke="#e0a458" stroke-width="4"/>
+  <rect x="428" y="128" width="200" height="104" fill="#1e2935" stroke="#e0a458" stroke-width="4"/>
+  <rect x="12" y="244" width="616" height="104" fill="#101820" stroke="#e0a458" stroke-width="4"/>
+  <circle cx="194" cy="132" r="22" fill="#f0c987"/>
+  <rect x="185" y="154" width="18" height="42" fill="#d48452"/>
+  <rect x="334" y="92" width="46" height="88" fill="#f0c987"/>
+  <text x="28" y="40" fill="#ffffff" font-family="sans-serif" font-size="16">GAMEPLAY</text>
+  <text x="444" y="42" fill="#ffffff" font-family="sans-serif" font-size="16">CHARACTER</text>
+  <text x="444" y="158" fill="#ffffff" font-family="sans-serif" font-size="16">UI / HUD</text>
+  <text x="28" y="276" fill="#ffffff" font-family="sans-serif" font-size="16">NARRATIVE FRAME</text>
+</svg>

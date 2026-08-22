@@ -1,0 +1,337 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://create-world.local/schemas/visual-decision-v1.schema.json",
+  "title": "Create World Visual Direction Decision 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "metadata",
+    "status",
+    "decision_brief",
+    "source_functions",
+    "benchmark",
+    "candidates",
+    "craft_gates",
+    "player_tests",
+    "recommendation",
+    "creator_decision",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_version", "generated_at", "revision"],
+      "properties": {
+        "skill_version": { "$ref": "#/$defs/nonEmptyString" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "revision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "candidates_ready",
+        "test_ready",
+        "tested_inconclusive",
+        "player_supported",
+        "creator_selected_unvalidated",
+        "creator_override"
+      ]
+    },
+    "decision_brief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "slug",
+        "source_scope",
+        "target_players",
+        "target_platforms",
+        "target_resolutions",
+        "camera_modes",
+        "gameplay_readability_goal",
+        "production_budget",
+        "creator_preferences",
+        "creator_red_lines",
+        "assumptions"
+      ],
+      "properties": {
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "source_scope": { "$ref": "#/$defs/nonEmptyString" },
+        "target_players": { "$ref": "#/$defs/nonEmptyStringList" },
+        "target_platforms": { "$ref": "#/$defs/nonEmptyStringList" },
+        "target_resolutions": { "$ref": "#/$defs/nonEmptyStringList" },
+        "camera_modes": { "$ref": "#/$defs/nonEmptyStringList" },
+        "gameplay_readability_goal": { "$ref": "#/$defs/nonEmptyString" },
+        "production_budget": { "$ref": "#/$defs/nonEmptyString" },
+        "creator_preferences": { "$ref": "#/$defs/nonEmptyStringList" },
+        "creator_red_lines": { "$ref": "#/$defs/nonEmptyStringList" },
+        "assumptions": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "source_functions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sourceFunction" }
+    },
+    "benchmark": { "$ref": "#/$defs/benchmark" },
+    "candidates": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "$ref": "#/$defs/candidate" }
+    },
+    "craft_gates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/craftGate" }
+    },
+    "player_tests": {
+      "type": "array",
+      "maxItems": 2,
+      "items": { "$ref": "#/$defs/playerTest" }
+    },
+    "recommendation": { "$ref": "#/$defs/recommendation" },
+    "creator_decision": { "$ref": "#/$defs/creatorDecision" },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_paths", "input_hashes"],
+      "properties": {
+        "source_paths": { "$ref": "#/$defs/stringList" },
+        "input_hashes": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "stringList": { "type": "array", "items": { "type": "string" } },
+    "nonEmptyStringList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "sourceFunction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "statement", "evidence_refs", "status", "evidence"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^SF-[0-9]{3,}$" },
+        "statement": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_refs": { "$ref": "#/$defs/nonEmptyStringList" },
+        "status": { "enum": ["pass", "fail", "pending"] },
+        "evidence": { "type": "string" }
+      }
+    },
+    "readabilityTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "prompt", "options", "expected_answer", "exposure_seconds"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^RT-[0-9]{3,}$" },
+        "prompt": { "$ref": "#/$defs/nonEmptyString" },
+        "options": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "expected_answer": { "$ref": "#/$defs/nonEmptyString" },
+        "exposure_seconds": { "type": "integer", "minimum": 3, "maximum": 15 }
+      }
+    },
+    "benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "content_brief",
+        "composition",
+        "width",
+        "height",
+        "panels",
+        "shared_constraints",
+        "max_generation_attempts",
+        "readability_tasks"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^BM-[0-9]{3,}$" },
+        "content_brief": { "$ref": "#/$defs/nonEmptyString" },
+        "composition": { "$ref": "#/$defs/nonEmptyString" },
+        "width": { "type": "integer", "minimum": 320 },
+        "height": { "type": "integer", "minimum": 180 },
+        "panels": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "enum": ["gameplay_scene", "native_character", "ui_hud", "narrative_frame"] }
+        },
+        "shared_constraints": { "$ref": "#/$defs/nonEmptyStringList" },
+        "max_generation_attempts": { "const": 2 },
+        "readability_tasks": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/readabilityTask" }
+        }
+      }
+    },
+    "styleSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "style_anchor",
+        "pixel_policy",
+        "palette",
+        "shape_language",
+        "lighting",
+        "camera",
+        "ui",
+        "motion",
+        "negative_rules",
+        "asset_overrides"
+      ],
+      "properties": {
+        "style_anchor": { "$ref": "#/$defs/nonEmptyString" },
+        "pixel_policy": { "$ref": "#/$defs/nonEmptyString" },
+        "palette": { "$ref": "#/$defs/nonEmptyStringList" },
+        "shape_language": { "$ref": "#/$defs/nonEmptyStringList" },
+        "lighting": { "$ref": "#/$defs/nonEmptyStringList" },
+        "camera": { "$ref": "#/$defs/nonEmptyStringList" },
+        "ui": { "$ref": "#/$defs/nonEmptyStringList" },
+        "motion": { "$ref": "#/$defs/nonEmptyStringList" },
+        "negative_rules": { "$ref": "#/$defs/nonEmptyStringList" },
+        "asset_overrides": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/nonEmptyStringList" }
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "blind_id",
+        "name",
+        "hypothesis",
+        "benchmark_id",
+        "board_path",
+        "board_sha256",
+        "generation_attempts",
+        "revision_round",
+        "derived_from",
+        "panel_coverage",
+        "prompt_capsule",
+        "style_system"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^C-[ABC]$" },
+        "blind_id": { "enum": ["A", "B", "C"] },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "hypothesis": { "$ref": "#/$defs/nonEmptyString" },
+        "benchmark_id": { "type": "string", "pattern": "^BM-[0-9]{3,}$" },
+        "board_path": { "$ref": "#/$defs/nonEmptyString" },
+        "board_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "generation_attempts": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "revision_round": { "type": "integer", "minimum": 0, "maximum": 1 },
+        "derived_from": { "type": ["string", "null"], "pattern": "^C-[ABC]$" },
+        "panel_coverage": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "enum": ["gameplay_scene", "native_character", "ui_hud", "narrative_frame"] }
+        },
+        "prompt_capsule": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["positive", "negative"],
+          "properties": {
+            "positive": { "$ref": "#/$defs/nonEmptyStringList" },
+            "negative": { "$ref": "#/$defs/nonEmptyStringList" }
+          }
+        },
+        "style_system": { "$ref": "#/$defs/styleSystem" }
+      }
+    },
+    "craftGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "candidate_id", "category", "result", "method", "evidence"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^CG-[0-9]{3,}$" },
+        "candidate_id": { "type": "string", "pattern": "^C-[ABC]$" },
+        "category": { "enum": ["source_function", "craft", "readability", "technical", "production"] },
+        "result": { "enum": ["pass", "fail", "pending"] },
+        "method": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "playerTest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "round",
+        "status",
+        "cohort_type",
+        "target_player_screen",
+        "min_valid_responses",
+        "recommended_max_responses",
+        "randomize_candidate_order",
+        "blind_labels",
+        "response_paths",
+        "analysis_path"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^TEST-[0-9]{3,}$" },
+        "round": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "status": { "enum": ["planned", "completed"] },
+        "cohort_type": { "enum": ["new", "reused"] },
+        "target_player_screen": { "$ref": "#/$defs/nonEmptyStringList" },
+        "min_valid_responses": { "const": 8 },
+        "recommended_max_responses": { "const": 12 },
+        "randomize_candidate_order": { "const": true },
+        "blind_labels": { "const": true },
+        "response_paths": { "$ref": "#/$defs/stringList" },
+        "analysis_path": { "type": ["string", "null"] }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "candidate_id", "basis"],
+      "properties": {
+        "status": { "enum": ["not_ready", "player_leader", "inconclusive"] },
+        "candidate_id": { "type": ["string", "null"], "pattern": "^C-[ABC]$" },
+        "basis": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "creatorDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "selected_candidate_id", "rationale", "decided_at"],
+      "properties": {
+        "status": {
+          "enum": [
+            "undecided",
+            "accepted_player_leader",
+            "selected_without_validation",
+            "overrode_player_leader"
+          ]
+        },
+        "selected_candidate_id": { "type": ["string", "null"], "pattern": "^C-[ABC]$" },
+        "rationale": { "type": "string" },
+        "decided_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    }
+  }
+}

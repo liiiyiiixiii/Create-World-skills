@@ -1,0 +1,480 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://create-world.local/schemas/art-direction-v1.schema.json",
+  "title": "Create World Art Direction 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "metadata",
+    "project",
+    "sources",
+    "observations",
+    "constraints",
+    "territories",
+    "selection",
+    "style_kernel",
+    "translation_rules",
+    "visual_system",
+    "asset_families",
+    "prompt_capsule",
+    "pilot_plan",
+    "qa",
+    "review"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["skill_version", "generated_at", "revision"],
+      "properties": {
+        "skill_version": { "$ref": "#/$defs/nonEmptyString" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "revision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "slug", "source_scope", "game_format", "target_platforms", "aspect_ratios", "camera_modes", "player_experience"],
+      "properties": {
+        "title": { "$ref": "#/$defs/nonEmptyString" },
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "source_scope": { "$ref": "#/$defs/nonEmptyString" },
+        "game_format": { "$ref": "#/$defs/nonEmptyString" },
+        "target_platforms": { "$ref": "#/$defs/nonEmptyStringList" },
+        "aspect_ratios": { "$ref": "#/$defs/nonEmptyStringList" },
+        "camera_modes": { "$ref": "#/$defs/nonEmptyStringList" },
+        "player_experience": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "kind", "role", "locator_scheme", "evidence_status", "notes"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^SRC-[0-9]{3,}$" },
+          "title": { "$ref": "#/$defs/nonEmptyString" },
+          "kind": { "enum": ["brief", "film", "film_still", "script", "subtitle", "novel", "comic", "gameplay_spec", "reference", "project_file", "other"] },
+          "role": { "enum": ["primary", "constraint", "reference", "anti_reference"] },
+          "locator_scheme": { "$ref": "#/$defs/nonEmptyString" },
+          "evidence_status": { "enum": ["verified", "partial", "unverified"] },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "statement", "confidence", "source_refs"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^OBS-[0-9]{3,}$" },
+          "category": { "enum": ["palette_value", "lighting", "composition", "shape", "material", "camera", "motion", "typography", "other"] },
+          "statement": { "$ref": "#/$defs/nonEmptyString" },
+          "confidence": { "enum": ["high", "medium", "low"] },
+          "source_refs": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/$defs/sourceRef" }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["technical", "gameplay_readability", "production", "accessibility", "assumptions"],
+      "properties": {
+        "technical": { "$ref": "#/$defs/nonEmptyStringList" },
+        "gameplay_readability": { "$ref": "#/$defs/nonEmptyStringList" },
+        "production": { "$ref": "#/$defs/nonEmptyStringList" },
+        "accessibility": { "$ref": "#/$defs/nonEmptyStringList" },
+        "assumptions": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "territories": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "thesis", "visual_formula", "keeps", "transforms", "rejects", "risks", "scores", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^T-[0-9]{3,}$" },
+          "name": { "$ref": "#/$defs/nonEmptyString" },
+          "thesis": { "$ref": "#/$defs/nonEmptyString" },
+          "visual_formula": { "$ref": "#/$defs/nonEmptyString" },
+          "keeps": { "$ref": "#/$defs/nonEmptyStringList" },
+          "transforms": { "$ref": "#/$defs/nonEmptyStringList" },
+          "rejects": { "$ref": "#/$defs/nonEmptyStringList" },
+          "risks": { "$ref": "#/$defs/nonEmptyStringList" },
+          "scores": { "$ref": "#/$defs/scores" },
+          "status": { "enum": ["selected", "rejected"] }
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_territory_id", "selection_rationale", "accepted_tradeoffs"],
+      "properties": {
+        "selected_territory_id": { "type": "string", "pattern": "^T-[0-9]{3,}$" },
+        "selection_rationale": { "$ref": "#/$defs/nonEmptyString" },
+        "accepted_tradeoffs": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "style_kernel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_territory_id", "direction_sentence", "emotional_contract", "pillars", "anti_pillars", "identity_tokens"],
+      "properties": {
+        "selected_territory_id": { "type": "string", "pattern": "^T-[0-9]{3,}$" },
+        "direction_sentence": { "$ref": "#/$defs/nonEmptyString" },
+        "emotional_contract": { "$ref": "#/$defs/nonEmptyString" },
+        "pillars": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/pillar" }
+        },
+        "anti_pillars": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "identity_tokens": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 12,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "translation_rules": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source_cue", "narrative_function", "treatment", "game_rule", "source_observation_ids", "asset_family_ids"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^TR-[0-9]{3,}$" },
+          "source_cue": { "$ref": "#/$defs/nonEmptyString" },
+          "narrative_function": { "$ref": "#/$defs/nonEmptyString" },
+          "treatment": { "enum": ["retain", "abstract", "replace"] },
+          "game_rule": { "$ref": "#/$defs/nonEmptyString" },
+          "source_observation_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^OBS-[0-9]{3,}$" }
+          },
+          "asset_family_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^AF-[0-9]{3,}$" }
+          }
+        }
+      }
+    },
+    "visual_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pixel_policy", "palette", "value_structure", "shape_language", "lighting", "camera_composition", "material_texture", "typography_ui", "motion_effects"],
+      "properties": {
+        "pixel_policy": { "$ref": "#/$defs/pixelPolicy" },
+        "palette": { "$ref": "#/$defs/palette" },
+        "value_structure": { "$ref": "#/$defs/nonEmptyStringList" },
+        "shape_language": { "$ref": "#/$defs/shapeLanguage" },
+        "lighting": { "$ref": "#/$defs/lighting" },
+        "camera_composition": { "$ref": "#/$defs/cameraComposition" },
+        "material_texture": { "$ref": "#/$defs/materialTexture" },
+        "typography_ui": { "$ref": "#/$defs/typographyUi" },
+        "motion_effects": { "$ref": "#/$defs/motionEffects" }
+      }
+    },
+    "asset_families": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/assetFamily" }
+    },
+    "prompt_capsule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style_anchor", "positive_tokens", "negative_tokens", "composition_template", "asset_specific_notes"],
+      "properties": {
+        "style_anchor": { "$ref": "#/$defs/nonEmptyString" },
+        "positive_tokens": {
+          "type": "array",
+          "minItems": 5,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "negative_tokens": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        },
+        "composition_template": { "$ref": "#/$defs/nonEmptyString" },
+        "asset_specific_notes": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "pilot_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generation_status", "tests", "artifact_paths"],
+      "properties": {
+        "generation_status": { "enum": ["not_requested", "planned", "completed"] },
+        "tests": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/pilotTest" }
+        },
+        "artifact_paths": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gates", "known_risks", "open_questions"],
+      "properties": {
+        "gates": {
+          "type": "array",
+          "minItems": 6,
+          "items": { "$ref": "#/$defs/qaGate" }
+        },
+        "known_risks": { "$ref": "#/$defs/stringList" },
+        "open_questions": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approval_status", "locked_fields", "validation_notes"],
+      "properties": {
+        "approval_status": { "enum": ["draft", "provisional", "approved"] },
+        "locked_fields": { "$ref": "#/$defs/stringList" },
+        "validation_notes": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "stringList": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "nonEmptyStringList": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator"],
+      "properties": {
+        "source_id": { "type": "string", "pattern": "^SRC-[0-9]{3,}$" },
+        "locator": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_fidelity", "gameplay_readability", "production_feasibility", "distinctiveness", "system_coherence"],
+      "properties": {
+        "source_fidelity": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "gameplay_readability": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "production_feasibility": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "distinctiveness": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "system_coherence": { "type": "integer", "minimum": 1, "maximum": 5 }
+      }
+    },
+    "pillar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "rule", "proof"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^P-[0-9]{3,}$" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "rule": { "$ref": "#/$defs/nonEmptyString" },
+        "proof": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "pixelPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "native_canvas", "sampling", "display_scaling", "grid_rules", "exception_rules"],
+      "properties": {
+        "mode": { "enum": ["strict_pixel", "hybrid_pixel", "pixel_influenced", "non_pixel_2d"] },
+        "native_canvas": { "$ref": "#/$defs/nonEmptyString" },
+        "sampling": { "enum": ["nearest_neighbor", "mixed", "smooth"] },
+        "display_scaling": { "enum": ["integer_only", "integer_preferred", "free"] },
+        "grid_rules": { "$ref": "#/$defs/nonEmptyStringList" },
+        "exception_rules": { "$ref": "#/$defs/stringList" }
+      }
+    },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "hex", "role", "usage"],
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "hex": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+        "role": { "enum": ["background", "shadow", "midtone", "highlight", "accent", "ui_text", "semantic", "custom"] },
+        "usage": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "colors", "scene_variation", "forbidden_drift"],
+      "properties": {
+        "strategy": { "$ref": "#/$defs/nonEmptyString" },
+        "colors": {
+          "type": "array",
+          "minItems": 5,
+          "items": { "$ref": "#/$defs/color" }
+        },
+        "scene_variation": { "$ref": "#/$defs/nonEmptyStringList" },
+        "forbidden_drift": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "shapeLanguage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary_masses", "edge_language", "silhouette_rule", "detail_distribution"],
+      "properties": {
+        "primary_masses": { "$ref": "#/$defs/nonEmptyString" },
+        "edge_language": { "$ref": "#/$defs/nonEmptyString" },
+        "silhouette_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "detail_distribution": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "lighting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["baseline", "shadow_logic", "accent_logic", "scene_variation"],
+      "properties": {
+        "baseline": { "$ref": "#/$defs/nonEmptyString" },
+        "shadow_logic": { "$ref": "#/$defs/nonEmptyString" },
+        "accent_logic": { "$ref": "#/$defs/nonEmptyString" },
+        "scene_variation": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "cameraComposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gameplay_camera", "narrative_camera", "framing_rules", "depth_rules", "ui_safe_zones"],
+      "properties": {
+        "gameplay_camera": { "$ref": "#/$defs/nonEmptyString" },
+        "narrative_camera": { "$ref": "#/$defs/nonEmptyString" },
+        "framing_rules": { "$ref": "#/$defs/nonEmptyStringList" },
+        "depth_rules": { "$ref": "#/$defs/nonEmptyStringList" },
+        "ui_safe_zones": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "materialTexture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["base_materials", "texture_scale", "weathering_rule", "forbidden_effects"],
+      "properties": {
+        "base_materials": { "$ref": "#/$defs/nonEmptyStringList" },
+        "texture_scale": { "$ref": "#/$defs/nonEmptyString" },
+        "weathering_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "forbidden_effects": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "typographyUi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["font_direction", "hierarchy", "frame_language", "control_language", "contrast_rule"],
+      "properties": {
+        "font_direction": { "$ref": "#/$defs/nonEmptyString" },
+        "hierarchy": { "$ref": "#/$defs/nonEmptyStringList" },
+        "frame_language": { "$ref": "#/$defs/nonEmptyString" },
+        "control_language": { "$ref": "#/$defs/nonEmptyString" },
+        "contrast_rule": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "motionEffects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frame_cadence", "easing_language", "ambient_motion", "impact_effects", "restraint_rules"],
+      "properties": {
+        "frame_cadence": { "$ref": "#/$defs/nonEmptyString" },
+        "easing_language": { "$ref": "#/$defs/nonEmptyString" },
+        "ambient_motion": { "$ref": "#/$defs/nonEmptyStringList" },
+        "impact_effects": { "$ref": "#/$defs/nonEmptyStringList" },
+        "restraint_rules": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "assetFamily": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "function", "visual_mode", "camera", "native_spec", "scale_rule", "palette_rule", "shape_rule", "lighting_rule", "detail_budget", "motion_rule", "readability_test", "do", "avoid"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^AF-[0-9]{3,}$" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "function": { "$ref": "#/$defs/nonEmptyString" },
+        "visual_mode": { "enum": ["strict_pixel", "hybrid_pixel", "pixel_influenced", "illustrated", "raster_ui", "other_2d"] },
+        "camera": { "$ref": "#/$defs/nonEmptyString" },
+        "native_spec": { "$ref": "#/$defs/nonEmptyString" },
+        "scale_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "palette_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "shape_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "lighting_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "detail_budget": { "$ref": "#/$defs/nonEmptyString" },
+        "motion_rule": { "$ref": "#/$defs/nonEmptyString" },
+        "readability_test": { "$ref": "#/$defs/nonEmptyString" },
+        "do": { "$ref": "#/$defs/nonEmptyStringList" },
+        "avoid": { "$ref": "#/$defs/nonEmptyStringList" }
+      }
+    },
+    "pilotTest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "asset_family_id", "hypothesis", "deliverable", "pass_criteria"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^PT-[0-9]{3,}$" },
+        "asset_family_id": { "type": "string", "pattern": "^AF-[0-9]{3,}$" },
+        "hypothesis": { "$ref": "#/$defs/nonEmptyString" },
+        "deliverable": { "$ref": "#/$defs/nonEmptyString" },
+        "pass_criteria": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/nonEmptyString" }
+        }
+      }
+    },
+    "qaGate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "criterion", "method", "severity"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^QA-[0-9]{3,}$" },
+        "category": { "enum": ["readability", "consistency", "technical", "source_fidelity", "production", "accessibility", "rights", "motion"] },
+        "criterion": { "$ref": "#/$defs/nonEmptyString" },
+        "method": { "$ref": "#/$defs/nonEmptyString" },
+        "severity": { "enum": ["blocker", "warning"] }
+      }
+    }
+  }
+}

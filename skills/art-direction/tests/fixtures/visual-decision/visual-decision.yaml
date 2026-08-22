@@ -1,0 +1,194 @@
+schema_version: "1.0"
+metadata:
+  skill_version: "2.0.0"
+  generated_at: "2026-08-22T10:00:00+08:00"
+  revision: 1
+status: test_ready
+decision_brief:
+  title: 雾港来信
+  slug: fog-harbor-letters
+  source_scope: 一部关于封闭海港、等待与离开的短篇小说改编
+  target_players:
+    - 喜欢叙事探索与轻解谜的 18–35 岁玩家
+  target_platforms: [mobile, desktop]
+  target_resolutions: ["1280x720", "390x844 CSS px"]
+  camera_modes: [top-down gameplay, cinematic close-up]
+  gameplay_readability_goal: 玩家在五秒内辨认主角、出口和可交互信件
+  production_budget: 两人美术团队，十二周完成首章，允许混合像素剧情帧
+  creator_preferences:
+    - 压抑环境中保留少量温暖回应
+    - 材质有时间痕迹但不遮蔽路径
+  creator_red_lines:
+    - 不使用全局高饱和糖果色
+    - 不复制具体电影镜头或在世艺术家的独特风格
+  assumptions: []
+source_functions:
+  - id: SF-001
+    statement: 封闭空间必须持续制造制度性压迫
+    evidence_refs: ["story.md#chapter-1", "story.md#chapter-4"]
+    status: pass
+    evidence: 三套样板都用墙体、窄框与受限视野包围主角
+  - id: SF-002
+    statement: 暖光只在回应、出口或希望出现时释放
+    evidence_refs: ["story.md#letter-3"]
+    status: pass
+    evidence: 三套样板均把唯一暖色或高亮留给出口与信件
+benchmark:
+  id: BM-001
+  content_brief: 主角站在封闭仓库中央，右上方有唯一出口，左下方桌上有可交互信件；HUD 显示目标，剧情帧表现收到回信的瞬间
+  composition: 左上为主玩法场景，右上为原生尺寸角色，右中为 UI/HUD，下方为关键叙事镜头
+  width: 640
+  height: 360
+  panels: [gameplay_scene, native_character, ui_hud, narrative_frame]
+  shared_constraints:
+    - 相同角色、仓库、出口、信件和 UI 文案
+    - 相同面板比例、镜头距离和信息密度
+    - 只允许视觉制度发生变化
+  max_generation_attempts: 2
+  readability_tasks:
+    - id: RT-001
+      prompt: 主角位于画面的哪个区域？
+      options: [左侧, 中央, 右侧]
+      expected_answer: 中央
+      exposure_seconds: 5
+    - id: RT-002
+      prompt: 出口位于哪个方向？
+      options: [左上, 右上, 下方]
+      expected_answer: 右上
+      exposure_seconds: 5
+    - id: RT-003
+      prompt: 可交互物是什么？
+      options: [信件, 铁门, 路灯]
+      expected_answer: 信件
+      exposure_seconds: 5
+candidates:
+  - id: C-A
+    blind_id: A
+    name: 锈色信号灯
+    hypothesis: 低明度硬边像素与单一旧金信号色能同时保留压迫感和操作方向
+    benchmark_id: BM-001
+    board_path: candidates/candidate-A.svg
+    board_sha256: 469253359dffbb540714e81145984f793dd33d9bbbd9dac4d93890b33ab77880
+    generation_attempts: 1
+    revision_round: 0
+    derived_from: null
+    panel_coverage: [gameplay_scene, native_character, ui_hud, narrative_frame]
+    prompt_capsule:
+      positive: [硬边像素簇, 低饱和蓝灰, 旧金信号光, 窄框构图]
+      negative: [平滑 3D 渲染, 全局高饱和, 模糊边缘]
+    style_system:
+      style_anchor: 潮湿封闭海港中的硬边混合像素视觉，以旧金信号光切开低彩蓝灰空间
+      pixel_policy: 可玩场景严格最近邻，剧情帧允许高细节硬边栅格
+      palette: [蓝灰阴影, 锈褐中间调, 旧金交互强调, 米白 UI 文字]
+      shape_language: [厚重矩形环境, 清晰角色轮廓, 窄门与长阴影]
+      lighting: [低明度常态, 出口和回信使用旧金边缘光]
+      camera: [固定俯视玩法镜头, 剧情帧使用受压迫近景]
+      ui: [深色实底, 旧金细框, 米白高对比文字]
+      motion: [短促步行动画, 环境低频循环, 回信时一次性光线释放]
+      negative_rules: [不用双线性缩放, 不让材质噪点盖住路径, 不把金色用于普通装饰]
+      asset_overrides:
+        gameplay_environment: [限制纹理对比，出口高一个明度层级]
+        characters: [原生尺寸保持一像素深色轮廓]
+        ui_hud: [文字对比优先于材质]
+        narrative_frame: [允许更多颗粒与电影式近景]
+  - id: C-B
+    blind_id: B
+    name: 旧纸与潮雾
+    hypothesis: 柔和纸张色与克制手绘像素能降低题材距离感，同时维持封闭空间的忧郁
+    benchmark_id: BM-001
+    board_path: candidates/candidate-B.svg
+    board_sha256: 3af36400cfa826d92d4d7c25f04e0631c3fc39ee7825cdce9785ca17d54f8775
+    generation_attempts: 1
+    revision_round: 0
+    derived_from: null
+    panel_coverage: [gameplay_scene, native_character, ui_hud, narrative_frame]
+    prompt_capsule:
+      positive: [纸张色块, 柔和有限色板, 深褐轮廓, 克制潮雾]
+      negative: [无轮廓水彩, 纯白现代 UI, 过度可爱]
+    style_system:
+      style_anchor: 旧纸、潮雾与深褐轮廓组成的温和像素绘本，在安静等待中保留封闭感
+      pixel_policy: 像素影响的块面绘制，不宣称严格逐像素
+      palette: [旧纸米色, 雾绿中间调, 深褐轮廓, 柔金反馈]
+      shape_language: [圆角人物, 稳定矩形建筑, 局部手绘不规则边缘]
+      lighting: [漫射阴天光, 回信时提升暖色面积但不提高全局饱和度]
+      camera: [轻俯视玩法镜头, 剧情帧保留纸页式留白]
+      ui: [纸页面板, 深褐文字, 柔金选择态]
+      motion: [缓慢雾气, 两到四帧克制动作, 翻页式转场]
+      negative_rules: [不用透明低对比文字, 不用软糊缩放, 不把角色幼化成喜剧]
+      asset_overrides:
+        gameplay_environment: [纸张纹理保持低对比]
+        characters: [轮廓比环境深两个明度层级]
+        ui_hud: [面板不超过玩法画面三分之一]
+        narrative_frame: [允许更大留白]
+  - id: C-C
+    blind_id: C
+    name: 夜港霓虹切面
+    hypothesis: 几何切面与冷暖霓虹对比能提升辨识度，但必须验证是否偏离原作克制气质
+    benchmark_id: BM-001
+    board_path: candidates/candidate-C.svg
+    board_sha256: 26a2c96fea17d1086a3af95ed0cb0c5635fb4251a78d1806c92b45bd06db7582
+    generation_attempts: 1
+    revision_round: 0
+    derived_from: null
+    panel_coverage: [gameplay_scene, native_character, ui_hud, narrative_frame]
+    prompt_capsule:
+      positive: [几何切面, 深紫夜港, 青色路径光, 洋红反馈]
+      negative: [赛博朋克广告墙, 复杂发光文字, 无限制霓虹]
+    style_system:
+      style_anchor: 深紫封闭空间由青色路径光切开，角色和 UI 使用受控几何切面与少量洋红反馈
+      pixel_policy: 硬边像素影响 2D，允许非网格几何形状
+      palette: [深紫背景, 青色路径, 洋红事件反馈, 暖黄希望节点]
+      shape_language: [尖锐菱形角色, 大块几何建筑, 高对比通道]
+      lighting: [冷色路径常亮, 暖黄只标记出口, 洋红只标记事件]
+      camera: [正交俯视玩法镜头, 斜切近景叙事镜头]
+      ui: [深色透明实底, 青色焦点框, 白色文字]
+      motion: [阶梯式闪烁, 几何擦除转场, 禁止持续强闪]
+      negative_rules: [不用品牌式霓虹文字, 不让发光吞掉轮廓, 不用连续闪烁]
+      asset_overrides:
+        gameplay_environment: [发光面积低于画面百分之十五]
+        characters: [主角暖色与路径冷色分离]
+        ui_hud: [避免透明度导致背景干扰]
+        narrative_frame: [斜切构图不得改变人物关系]
+craft_gates:
+  - {id: CG-001, candidate_id: C-A, category: source_function, result: pass, method: 对照来源功能逐项审阅, evidence: 窄框与唯一旧金出口均可见}
+  - {id: CG-002, candidate_id: C-A, category: craft, result: pass, method: 原生尺寸和四倍最近邻检查, evidence: 层级清楚且边缘无混合采样}
+  - {id: CG-003, candidate_id: C-A, category: readability, result: pass, method: 五秒主角出口信件预检, evidence: 三个目标均能凭轮廓和明度区分}
+  - {id: CG-004, candidate_id: C-A, category: technical, result: pass, method: 尺寸采样和 UI 对比检查, evidence: 640x360 四面板完整}
+  - {id: CG-005, candidate_id: C-A, category: production, result: pass, method: 对照团队和周期估算资产复杂度, evidence: 有限色板与分层细节可在预算内扩产}
+  - {id: CG-006, candidate_id: C-B, category: source_function, result: pass, method: 对照来源功能逐项审阅, evidence: 包围构图和暖色回应均保留}
+  - {id: CG-007, candidate_id: C-B, category: craft, result: pass, method: 原生尺寸与缩略图检查, evidence: 纸张纹理没有遮蔽轮廓}
+  - {id: CG-008, candidate_id: C-B, category: readability, result: pass, method: 五秒主角出口信件预检, evidence: 三个目标通过深褐轮廓区分}
+  - {id: CG-009, candidate_id: C-B, category: technical, result: pass, method: 尺寸和小屏文字检查, evidence: 640x360 四面板完整且文字实底}
+  - {id: CG-010, candidate_id: C-B, category: production, result: pass, method: 对照团队和周期估算资产复杂度, evidence: 手绘纹理规则受控且可模板化}
+  - {id: CG-011, candidate_id: C-C, category: source_function, result: pass, method: 对照来源功能逐项审阅, evidence: 暖黄仍只承担出口和希望}
+  - {id: CG-012, candidate_id: C-C, category: craft, result: pass, method: 原生尺寸与闪烁风险检查, evidence: 几何层级稳定且没有持续闪烁}
+  - {id: CG-013, candidate_id: C-C, category: readability, result: pass, method: 五秒主角出口信件预检, evidence: 三个目标均有独立形状和色彩编码}
+  - {id: CG-014, candidate_id: C-C, category: technical, result: pass, method: 尺寸采样和发光面积检查, evidence: 发光面积受控且面板规格一致}
+  - {id: CG-015, candidate_id: C-C, category: production, result: pass, method: 对照团队和周期估算资产复杂度, evidence: 几何组件可复用但特效需要预算监控}
+player_tests:
+  - id: TEST-001
+    round: 1
+    status: planned
+    cohort_type: new
+    target_player_screen:
+      - 过去一年玩过至少一款叙事探索或轻解谜游戏
+      - 愿意在手机或电脑上游玩低强度叙事游戏
+    min_valid_responses: 8
+    recommended_max_responses: 12
+    randomize_candidate_order: true
+    blind_labels: true
+    response_paths: []
+    analysis_path: null
+recommendation:
+  status: not_ready
+  candidate_id: null
+  basis: []
+creator_decision:
+  status: undecided
+  selected_candidate_id: null
+  rationale: ""
+  decided_at: null
+provenance:
+  source_paths: [sources/story.md]
+  input_hashes:
+    sources/story.md: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa

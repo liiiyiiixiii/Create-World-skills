@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "metadata": {
+    "scene_id": "anonymous-courtyard-regression",
+    "generation_mode": "balanced",
+    "input_type": "description",
+    "image_generation_calls": 1,
+    "art_direction_id": null
+  },
+  "coordinate_space": {
+    "width": 1234,
+    "height": 1275
+  },
+  "collision_model": "footpoint",
+  "player_footprint": {
+    "width": 48,
+    "height": 64,
+    "foot_inset": 8
+  },
+  "walkable": [
+    {
+      "id": "courtyard-floor",
+      "points": [
+        [295, 189], [367, 213], [440, 180], [447, 219], [493, 215],
+        [750, 217], [790, 217], [790, 178], [879, 216], [936, 180],
+        [1199, 180], [1199, 365], [1008, 360], [1008, 924], [1193, 924],
+        [1194, 1190], [40, 1190], [40, 1094], [291, 1092], [294, 736],
+        [43, 736], [43, 503], [298, 503]
+      ]
+    }
+  ],
+  "obstacles": [
+    {"id": "north-bench", "shape": "rect", "x": 886, "y": 236, "width": 149, "height": 71},
+    {"id": "southwest-bench", "shape": "rect", "x": 369, "y": 928, "width": 82, "height": 66},
+    {"id": "south-bench", "shape": "rect", "x": 763, "y": 1052, "width": 83, "height": 70},
+    {"id": "round-table", "shape": "circle", "cx": 383, "cy": 576, "radius": 38},
+    {"id": "barrel", "shape": "circle", "cx": 472, "cy": 503, "radius": 31}
+  ],
+  "anchors": [
+    {"id": "east-entry", "kind": "spawn", "x": 1080, "y": 965},
+    {"id": "north-gate", "kind": "exit", "x": 620, "y": 275},
+    {"id": "west-office", "kind": "exit", "x": 165, "y": 545},
+    {"id": "south-archive", "kind": "exit", "x": 165, "y": 1132},
+    {"id": "garden-zone", "kind": "interaction", "x": 790, "y": 640}
+  ]
+}

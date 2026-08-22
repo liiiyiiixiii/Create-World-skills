@@ -1,0 +1,533 @@
+schema_version: "1.0"
+metadata:
+  skill_version: "1.0.0"
+  generated_at: "2026-08-22T18:30:00+08:00"
+  revision: 1
+project:
+  title: "雾港来信"
+  slug: "fog-harbor"
+  source_scope: "一部虚构黑白海港剧情片的完整剧本、12 张关键帧与移动端玩法简报"
+  game_format: "2D 俯视探索 + 对话调查 + 章节式剧情关键帧"
+  target_platforms:
+    - "移动端网页"
+    - "桌面浏览器"
+  aspect_ratios:
+    - "16:9 横屏主画幅"
+    - "小屏安全区适配"
+  camera_modes:
+    - "固定 3/4 俯视可玩镜头"
+    - "电影式剧情近景"
+  player_experience: "在潮湿、克制且方向不明的港口中寻找线索，并在极少数暖光时刻感到人与人之间仍有回应。"
+sources:
+  - id: SRC-001
+    title: "《雾港来信》剧本"
+    kind: script
+    role: primary
+    locator_scheme: "幕/场/页码"
+    evidence_status: verified
+    notes: "覆盖完整三幕。"
+  - id: SRC-002
+    title: "关键帧选集"
+    kind: film_still
+    role: primary
+    locator_scheme: "frame-01 至 frame-12"
+    evidence_status: verified
+    notes: "覆盖码头、邮局、灯塔、风暴和结尾。"
+  - id: SRC-003
+    title: "移动端玩法简报"
+    kind: gameplay_spec
+    role: constraint
+    locator_scheme: "章节标题"
+    evidence_status: verified
+    notes: "定义横屏、点击/虚拟摇杆与低配设备约束。"
+observations:
+  - id: OBS-001
+    category: palette_value
+    statement: "常态画面接近黑白低对比，只有信号灯、旧信封和结尾晨光出现明显暖色。"
+    confidence: high
+    source_refs:
+      - source_id: SRC-002
+        locator: "frame-01, frame-03, frame-09, frame-12"
+  - id: OBS-002
+    category: composition
+    statement: "门框、仓库梁柱和船舷经常把人物夹在狭窄纵向区域，海面则作为少数横向开阔空间。"
+    confidence: high
+    source_refs:
+      - source_id: SRC-002
+        locator: "frame-02 至 frame-08"
+  - id: OBS-003
+    category: material
+    statement: "潮湿木板、锈铁、盐渍玻璃和折皱纸张反复出现，并承担时间流逝的可见痕迹。"
+    confidence: high
+    source_refs:
+      - source_id: SRC-001
+        locator: "第一幕第 2、5 场；第二幕第 8 场"
+      - source_id: SRC-002
+        locator: "frame-03, frame-05, frame-07"
+  - id: OBS-004
+    category: lighting
+    statement: "室内主要由侧窗形成窄光带，人物脸部经常有一半落入阴影。"
+    confidence: high
+    source_refs:
+      - source_id: SRC-002
+        locator: "frame-04, frame-06, frame-10"
+  - id: OBS-005
+    category: motion
+    statement: "大部分场景动作缓慢，风暴段落才出现急促摇晃、雨线和闪光。"
+    confidence: medium
+    source_refs:
+      - source_id: SRC-001
+        locator: "第二幕第 11 场至第三幕第 1 场"
+  - id: OBS-006
+    category: typography
+    statement: "故事中的文字主要来自邮戳、手写信和港务编号，字迹有机械印刷与私人手写的对照。"
+    confidence: high
+    source_refs:
+      - source_id: SRC-001
+        locator: "贯穿全片的信件道具"
+constraints:
+  technical:
+    - "主画布 1280x720，目标低配移动设备稳定 30 FPS。"
+    - "可玩资产必须支持最近邻缩放，不依赖实时模糊或昂贵后处理。"
+  gameplay_readability:
+    - "交互物在 6 英寸横屏上必须从背景中一眼辨认。"
+    - "雾气不能遮蔽路径边缘、危险区域、角色脚底与对话文字。"
+  production:
+    - "两人美术团队，八周完成首章；角色每方向最多四帧步行。"
+    - "优先建立可复用模块和小型角色调色板。"
+  accessibility:
+    - "关键反馈不能只靠红绿区分。"
+    - "正文在复杂背景上保持清晰描边或实色面板。"
+  assumptions: []
+territories:
+  - id: T-001
+    name: "严格单色港口"
+    thesis: "用 1-bit/4 色严格像素把海港压缩成高反差剪影，强调孤独和方向感。"
+    visual_formula: "4 色灰阶 + 单一琥珀语义色 + 16x16 模块 + 硬切镜头"
+    keeps:
+      - "黑白常态与暖色例外"
+      - "封闭框景和海面开阔反差"
+    transforms:
+      - "把潮湿材质抽象为规则化抖动纹理"
+    rejects:
+      - "高细节剧情插画"
+    risks:
+      - "人物表情和信件细节可能不足"
+    scores:
+      source_fidelity: 4
+      gameplay_readability: 5
+      production_feasibility: 4
+      distinctiveness: 4
+      system_coherence: 4
+    status: rejected
+  - id: T-002
+    name: "锈色信号灯"
+    thesis: "可玩层使用受限调色板的硬边像素，剧情帧保留电影构图和较高细节，用锈铁、雾灰与琥珀信号光统一。"
+    visual_formula: "混合像素 + 雾灰/锈褐基底 + 琥珀信号色 + 慢镜头/少量风暴爆发"
+    keeps:
+      - "低彩常态、暖光作为回应与方向"
+      - "窄框压迫与海面开阔"
+      - "材质承载时间"
+    transforms:
+      - "电影近景进入章节关键帧"
+      - "现实雾气转为不遮挡导航的分层像素雾"
+    rejects:
+      - "全局照片滤镜"
+      - "所有资产同等细节"
+    risks:
+      - "剧情帧与可玩资产可能出现精度断裂"
+    scores:
+      source_fidelity: 5
+      gameplay_readability: 5
+      production_feasibility: 4
+      distinctiveness: 5
+      system_coherence: 5
+    status: selected
+  - id: T-003
+    name: "纸上航海图"
+    thesis: "把世界统一成旧海图和印刷版画，让探索像在一封不断展开的信上进行。"
+    visual_formula: "纸张底色 + 深墨线 + 邮戳 UI + 低帧剪纸动作"
+    keeps:
+      - "信件、邮戳和编号"
+      - "慢节奏与手工时间感"
+    transforms:
+      - "写实港口替换为版画符号"
+    rejects:
+      - "真实空间光照"
+    risks:
+      - "风暴和潮湿环境的临场感减弱"
+    scores:
+      source_fidelity: 3
+      gameplay_readability: 4
+      production_feasibility: 5
+      distinctiveness: 5
+      system_coherence: 5
+    status: rejected
+selection:
+  selected_territory_id: T-002
+  selection_rationale: "它同时保留电影的镜头和材质证据，又把可玩层约束到清楚、可扩产的像素规则；相比严格单色方向，更能承载人物表情和信件特写。"
+  accepted_tradeoffs:
+    - "需要维护可玩像素层与高细节剧情层之间的共享调色和边缘规则。"
+    - "剧情关键帧数量必须受控，避免产能被插画吞噬。"
+style_kernel:
+  selected_territory_id: T-002
+  direction_sentence: "在雾灰、锈铁与潮湿木材组成的混合像素港口中，让极少量琥珀信号光承担方向、回应和希望。"
+  emotional_contract: "常态安静、潮湿、略微迷失；只有发现回信、点亮信号或抵达开阔海面时，画面才允许变暖、变亮、变宽。"
+  pillars:
+    - id: P-001
+      name: "低彩常态，琥珀回应"
+      rule: "世界维持雾灰和锈褐；琥珀只用于信号、关键交互和人与人的回应。"
+      proof: "缩略图中最亮暖色必须准确落在当前叙事或交互重点。"
+    - id: P-002
+      name: "封闭框景，海面释放"
+      rule: "室内和码头用梁柱、门框、船舷切割空间；关键释放镜头改用横向开阔构图。"
+      proof: "同章 pilot 必须包含一个窄框玩法画面和一个开阔剧情画面，二者仍共享材质与调色。"
+    - id: P-003
+      name: "材质就是时间"
+      rule: "锈、盐渍、磨木和折纸显示时间，但纹理密度服从路径、轮廓和文字。"
+      proof: "50% 缩放后材质仍可辨，交互对象和文字不被噪点吞没。"
+    - id: P-004
+      name: "功能分层的混合像素"
+      rule: "可玩环境与角色遵守硬边像素网格；剧情关键帧允许高细节，但共享色阶、颗粒和光线角色。"
+      proof: "角色、场景、UI 与剧情帧放在同一风格板时至少共享五个 identity token。"
+  anti_pillars:
+    - "不使用全局柔焦、任意双线性缩放或摄影滤镜假装像素。"
+    - "不让雾、盐渍和噪点覆盖交互路径、角色脸或正文。"
+    - "不把琥珀色当作无处不在的装饰色。"
+  identity_tokens:
+    - "雾灰低彩"
+    - "锈铁褐"
+    - "琥珀信号光"
+    - "硬边像素轮廓"
+    - "潮湿木纹"
+    - "窄框构图"
+    - "机械编号"
+    - "克制慢动作"
+translation_rules:
+  - id: TR-001
+    source_cue: "黑白常态中只在信号灯和回信时出现暖色"
+    narrative_function: "把方向和人与人的回应从冷漠环境中分离出来"
+    treatment: retain
+    game_rule: "琥珀色只用于当前关键交互、信号和剧情回应；非关键装饰不得使用同等亮度。"
+    source_observation_ids: [OBS-001]
+    asset_family_ids: [AF-001, AF-003, AF-004]
+  - id: TR-002
+    source_cue: "人物反复被门框、梁柱和船舷夹住"
+    narrative_function: "制造被空间和职责困住的感受"
+    treatment: abstract
+    game_rule: "可玩空间用深色结构框住房间边缘，但路径明度至少比边框高一级；释放镜头切到横向开阔海面。"
+    source_observation_ids: [OBS-002]
+    asset_family_ids: [AF-001, AF-004]
+  - id: TR-003
+    source_cue: "锈铁、盐渍、旧木和折纸反复显示时间"
+    narrative_function: "让等待和无人维护的生活可见"
+    treatment: retain
+    game_rule: "材质纹理使用 2–4 像素簇与局部磨损带，互动轮廓周围保留干净负空间。"
+    source_observation_ids: [OBS-003]
+    asset_family_ids: [AF-001, AF-003, AF-004]
+  - id: TR-004
+    source_cue: "人物脸部常被侧窗光分成明暗两半"
+    narrative_function: "表现犹疑、隐瞒和未说出口的信息"
+    treatment: abstract
+    game_rule: "角色常态采用单侧亮面与深色背侧；对话头像保留明显明暗分割，但眼睛和口型不落入纯黑。"
+    source_observation_ids: [OBS-004]
+    asset_family_ids: [AF-002, AF-004]
+  - id: TR-005
+    source_cue: "常态动作缓慢，风暴时才急促"
+    narrative_function: "让风暴成为情绪和信息同时突破的例外"
+    treatment: retain
+    game_rule: "常态步行与 UI 动效采用短循环和低幅度；风暴段落才启用斜雨、2 帧闪光和轻微镜头震动。"
+    source_observation_ids: [OBS-005]
+    asset_family_ids: [AF-001, AF-002, AF-003, AF-004]
+visual_system:
+  pixel_policy:
+    mode: hybrid_pixel
+    native_canvas: "320x180 gameplay base；48x64 character cell；1280x720 narrative frame"
+    sampling: mixed
+    display_scaling: integer_preferred
+    grid_rules:
+      - "可玩环境、角色、道具和像素 UI 的边缘对齐 1px 网格。"
+      - "可玩资产在导出与运行时使用最近邻采样。"
+    exception_rules:
+      - "剧情关键帧允许 1280x720 高细节栅格，但不得使用软焦；通过受限色阶、硬边和颗粒与像素层统一。"
+  palette:
+    strategy: "7 个角色色定义全局明度和语义；场景可在同一角色内微调色相，琥珀色严格限额。"
+    colors:
+      - name: "港夜黑"
+        hex: "#080B0D"
+        role: background
+        usage: "画布外、深水、最深室内和 UI 底。"
+      - name: "铁影灰"
+        hex: "#1B2326"
+        role: shadow
+        usage: "结构阴影、人物背光侧和非交互边框。"
+      - name: "雾板灰"
+        hex: "#586467"
+        role: midtone
+        usage: "雾、远景和普通金属。"
+      - name: "盐白"
+        hex: "#D3D0BE"
+        role: highlight
+        usage: "湿边、纸张高光和普通高光。"
+      - name: "锈铁褐"
+        hex: "#7A432B"
+        role: custom
+        usage: "旧铁、木缝和长期磨损。"
+      - name: "信号琥珀"
+        hex: "#E6A63B"
+        role: accent
+        usage: "关键交互、灯塔、回信和章节回应。"
+      - name: "正文米白"
+        hex: "#F1E8D2"
+        role: ui_text
+        usage: "正文、按钮主标签和必要轮廓。"
+    scene_variation:
+      - "室内向铁影灰和锈褐偏移；海面向蓝灰偏移。"
+      - "风暴降低中间调，增加盐白闪电，不增加新强调色。"
+    forbidden_drift:
+      - "禁止霓虹青紫、糖果高饱和和大面积纯白。"
+      - "禁止所有亮面都变成信号琥珀。"
+  value_structure:
+    - "背景/不可达区域：0–20% 明度。"
+    - "可走表面与普通角色：25–60% 明度。"
+    - "当前交互、文字和回应：70–95% 明度。"
+  shape_language:
+    primary_masses: "环境以厚重矩形、梯形码头和横向船体为主；人物轮廓用较圆的头部对抗硬结构。"
+    edge_language: "可玩层硬边、1–2px 阶梯轮廓；剧情层保留块面边缘而不使用柔化外发光。"
+    silhouette_rule: "角色在纯黑剪影下仍能通过帽型、肩线和手持物区分。"
+    detail_distribution: "细节集中在交互面、脸和手；不可达背景减少 40% 纹理密度。"
+  lighting:
+    baseline: "冷灰漫射光配单侧窄窗光，环境中间调压低。"
+    shadow_logic: "阴影使用大块色阶而非渐变；角色背光侧最多保留一个反光边。"
+    accent_logic: "信号琥珀只照亮叙事回应或当前目标，光晕半径受控且不覆盖文字。"
+    scene_variation:
+      - "灯塔章节增加纵向光束。"
+      - "结尾晨光提高整体中间调并扩大横向亮区。"
+  camera_composition:
+    gameplay_camera: "固定 3/4 俯视，角色脚点对齐碰撞，环境优先读路径与遮挡。"
+    narrative_camera: "16:9 近景/特写，沿用窄框与开阔海面的反差，允许慢速推镜。"
+    framing_rules:
+      - "常态将人物置于门框、梁柱或船舷之间。"
+      - "关键回应把亮区留在主体视线方向。"
+    depth_rules:
+      - "前景结构最深，角色与交互物居中，雾化远景低对比。"
+      - "不使用真实景深模糊；通过色阶和细节密度分层。"
+    ui_safe_zones:
+      - "左下保留移动控件安全区。"
+      - "右侧保留交互按钮与物品栏安全区。"
+      - "剧情帧底部 18% 避免关键脸部和文字道具。"
+  material_texture:
+    base_materials:
+      - "潮湿木板"
+      - "锈铁"
+      - "盐渍玻璃"
+      - "折皱纸张"
+    texture_scale: "可玩层以 2–4px 簇表达纹理，剧情层以相同方向和密度关系扩展。"
+    weathering_rule: "磨损集中在边缘、受力点和潮线；交互轮廓周围留一圈低噪声区域。"
+    forbidden_effects:
+      - "均匀噪点覆盖全图"
+      - "柔焦、色差和胶片划痕叠加在文字上"
+  typography_ui:
+    font_direction: "正文使用高可读黑体/像素黑体，邮戳和编号使用等宽窄体；手写仅用于短句道具。"
+    hierarchy:
+      - "正文米白 > 信号琥珀关键动作 > 雾灰辅助信息。"
+      - "按钮标签不低于移动端 16px 等效尺寸。"
+    frame_language: "深铁灰实底、1–2px 锈色边、局部邮戳/铆钉，不使用厚重装饰抢占画面。"
+    control_language: "触控按钮用清楚实色轮廓和状态变化；世界材质只作为边框提示。"
+    contrast_rule: "正文与面板保持至少 4.5:1，重要图标同时用形状和色值区分。"
+  motion_effects:
+    frame_cadence: "角色四帧步行 150–180ms/帧；环境循环 1–3 秒，剧情推镜 3–5 秒。"
+    easing_language: "UI 短促 ease-out；剧情淡入和推镜缓慢线性/轻缓入。"
+    ambient_motion:
+      - "低幅雾层横移"
+      - "偶发绳索摆动"
+      - "水面 2–3 帧反光"
+    impact_effects:
+      - "风暴斜雨"
+      - "2 帧盐白闪电"
+      - "不超过 4px 的短镜头震动"
+    restraint_rules:
+      - "常态不同时运行超过两个高对比环境动效。"
+      - "文字出现期间降低背景动效对比。"
+asset_families:
+  - id: AF-001
+    name: "可玩环境与地图"
+    function: "承载探索、路径判断、遮挡和交互点。"
+    visual_mode: strict_pixel
+    camera: "3/4 俯视，固定投影与脚点坐标。"
+    native_spec: "320x180 基准视口；16x16 模块；大地图按模块拼接。"
+    scale_rule: "运行时最近邻，整数倍优先；非整数适配时仍关闭图像平滑。"
+    palette_rule: "以港夜黑、铁影灰、雾板灰和锈铁褐为主；信号琥珀占屏不超过 3%。"
+    shape_rule: "主路径边缘连续，门、梯、箱和危险边界有独立轮廓。"
+    lighting_rule: "环境暗、路径中、目标亮；雾只降低远景对比。"
+    detail_budget: "交互区域最高，路径次之，不可达背景最低。"
+    motion_rule: "每场最多两个常驻环境循环；风暴作为章节例外。"
+    readability_test: "在 320x180 原生缩略图和 6 英寸横屏上，3 秒内指出路径、目标与危险。"
+    do:
+      - "用潮线和磨损解释空间使用。"
+      - "让互动轮廓周围保持低噪声。"
+    avoid:
+      - "用雾遮掩关卡结构。"
+      - "把所有木板画成同等高频纹理。"
+  - id: AF-002
+    name: "玩家与 NPC"
+    function: "在复杂港口背景中传达身份、朝向、动作和对话情绪。"
+    visual_mode: strict_pixel
+    camera: "与 3/4 俯视环境一致，剧情头像另用半身近景。"
+    native_spec: "48x64 单元格；上下左右各四帧步行；主角实际显示高约 56px。"
+    scale_rule: "最近邻整数倍；所有帧共享脚点和包围盒。"
+    palette_rule: "每角色 8–12 色，共享环境阴影与高光；身份色只占服装局部。"
+    shape_rule: "头部和持物稍放大，帽型、肩线、外套下摆形成唯一剪影。"
+    lighting_rule: "默认单侧亮面；眼睛、手和关键道具不进入纯黑。"
+    detail_budget: "脸和手优先，衣纹简化为 1–2 个大色块。"
+    motion_rule: "四帧步行 150–180ms/帧；停顿动作优先于复杂骨骼动画。"
+    readability_test: "角色以实际显示尺寸叠在最复杂码头背景上，灰度和色觉模拟下仍可区分。"
+    do:
+      - "把身份特征集中在上半身。"
+      - "统一脚点与方向比例。"
+    avoid:
+      - "依赖细小饰品作为唯一身份差异。"
+      - "用柔软发光描边补救轮廓。"
+  - id: AF-003
+    name: "UI、对话与反馈"
+    function: "承载文字、操作优先级、物品与状态反馈。"
+    visual_mode: raster_ui
+    camera: "屏幕空间，遵守 16:9 与小屏安全区。"
+    native_spec: "1280x720 设计稿；九宫格边框与矢量文字/图标混合。"
+    scale_rule: "边框按九宫格缩放，文字与触控区响应式适配。"
+    palette_rule: "深铁底、正文米白、锈色边；信号琥珀只标当前主操作。"
+    shape_rule: "矩形框、铆钉、邮戳切角；控件轮廓比世界物件更干净。"
+    lighting_rule: "只用轻微内阴影和状态亮边，不使用大面积外发光。"
+    detail_budget: "边框低频，文字区域干净；物品图标可保留少量材质。"
+    motion_rule: "面板 120–180ms ease-out；关键回信允许 400ms 慢展开。"
+    readability_test: "叠在最亮和最暗环境 pilot 上检查 4.5:1 对比、44px 触控区和文字换行。"
+    do:
+      - "用琥珀色表达唯一主操作。"
+      - "用形状与文字同时表达状态。"
+    avoid:
+      - "让所有按钮同时高亮。"
+      - "把手写字体用于长正文。"
+  - id: AF-004
+    name: "剧情关键帧"
+    function: "承载表情、信件特写、时间跳跃和情绪高潮。"
+    visual_mode: illustrated
+    camera: "16:9 电影近景、特写与少量开阔全景。"
+    native_spec: "1280x720；每章 3–5 张关键帧。"
+    scale_rule: "等比覆盖或 contain，不做任意拉伸；保留底部字幕安全区。"
+    palette_rule: "沿用全局角色色和明度关系，允许增加同色相过渡，不新增高饱和强调色。"
+    shape_rule: "块面清楚、边缘略硬，脸和信件细节高于背景。"
+    lighting_rule: "遵守单侧窄光与琥珀回应逻辑；高潮才扩大亮区。"
+    detail_budget: "主体和道具高，背景低；避免每张都达到海报级复杂度。"
+    motion_rule: "3–5 秒慢推、淡入淡出、有限颗粒；风暴段落才允许震动和闪光。"
+    readability_test: "在底部 18% 叠加字幕和右侧操作后，主体脸、手和关键道具仍无遮挡。"
+    do:
+      - "把电影构图集中在少量高价值节点。"
+      - "与可玩层共享雾灰、锈褐和琥珀角色。"
+    avoid:
+      - "直接复制具体电影帧或演员肖像。"
+      - "用写实照片质感破坏硬边系统。"
+prompt_capsule:
+  style_anchor: "潮湿海港中的混合像素 2D 视觉：雾灰与锈褐的低彩世界、硬边轮廓、受控磨损、窄框压迫，极少量琥珀信号光作为方向与回应。"
+  positive_tokens:
+    - "hybrid pixel 2D"
+    - "hard-edged readable silhouettes"
+    - "fog gray and rust brown low-chroma palette"
+    - "restricted amber signal accents"
+    - "wet wood, oxidized iron, salt-stained glass"
+    - "narrow framing with clear gameplay paths"
+    - "large value groups, controlled texture density"
+  negative_tokens:
+    - "soft blur or bilinear pixel edges"
+    - "neon cyberpunk colors"
+    - "uniform noise over the whole image"
+    - "photorealistic copied film frame"
+    - "amber used as general decoration"
+  composition_template: "保持 16:9；主体与交互路径位于中央 64% 可玩区，左下和右侧留移动/交互安全区；窄框结构包围常态场景，亮区落在当前目标或视线方向。"
+  asset_specific_notes:
+    AF-001: "优先路径、遮挡和交互轮廓；16x16 模块，最近邻。"
+    AF-002: "48x64 角色单元格，身份特征集中上半身，脚点统一。"
+    AF-003: "深铁底、米白正文、唯一琥珀主操作，满足小屏对比。"
+    AF-004: "允许高细节剧情构图，但共享色阶、硬边和底部字幕安全区。"
+pilot_plan:
+  generation_status: planned
+  tests:
+    - id: PT-001
+      asset_family_id: AF-001
+      hypothesis: "雾和磨损可以建立潮湿感，同时不损害路径和目标可读性。"
+      deliverable: "320x180 码头探索 pilot，含门、梯、危险水边和一个琥珀目标。"
+      pass_criteria:
+        - "3 秒内指出可走路径、危险边缘和目标。"
+        - "50% 缩放后雾气不吞没结构。"
+    - id: PT-002
+      asset_family_id: AF-002
+      hypothesis: "角色在低彩复杂背景中仍能靠剪影和局部身份色区分。"
+      deliverable: "主角与两名 NPC 的四向站姿和一组步行帧，叠在码头 pilot 上。"
+      pass_criteria:
+        - "纯黑剪影下三人仍可区分。"
+        - "灰度与色觉模拟下朝向和身份清楚。"
+    - id: PT-003
+      asset_family_id: AF-003
+      hypothesis: "世界内材质语言与现代触控可用性可以共存。"
+      deliverable: "对话框、物品提示和主交互按钮叠在最亮/最暗背景上。"
+      pass_criteria:
+        - "正文对比达到 4.5:1。"
+        - "唯一主操作在 1 秒内被指出，触控区不小于 44px。"
+    - id: PT-004
+      asset_family_id: AF-004
+      hypothesis: "高细节剧情帧能保留电影情绪而不脱离像素游戏的视觉内核。"
+      deliverable: "同一角色收到回信的 1280x720 近景，附底部字幕和右侧控件。"
+      pass_criteria:
+        - "与环境/角色 pilot 至少共享五个 identity token。"
+        - "脸、信件和琥珀亮区在 UI 覆盖后仍清楚。"
+  artifact_paths: []
+qa:
+  gates:
+    - id: QA-001
+      category: readability
+      criterion: "路径、目标、危险和角色在实际设备尺寸下可辨。"
+      method: "320x180 缩略图、6 英寸横屏和 3 秒指认测试。"
+      severity: blocker
+    - id: QA-002
+      category: consistency
+      criterion: "四个资产族至少共享五个 identity token，琥珀语义一致。"
+      method: "并排风格板与调色板采样。"
+      severity: blocker
+    - id: QA-003
+      category: technical
+      criterion: "可玩资产关闭平滑，帧包围盒和脚点一致。"
+      method: "运行时截图、像素边缘放大检查和精灵表脚本审计。"
+      severity: blocker
+    - id: QA-004
+      category: accessibility
+      criterion: "关键状态不只依赖色相，正文对比不低于 4.5:1。"
+      method: "灰度/色觉模拟与对比度测量。"
+      severity: blocker
+    - id: QA-005
+      category: source_fidelity
+      criterion: "低彩常态、窄框压迫、材质时间感和暖光回应均有画面 proof。"
+      method: "逐项对照 observation、translation rule 与 pilot。"
+      severity: warning
+    - id: QA-006
+      category: production
+      criterion: "首章资产量符合两人八周产能。"
+      method: "按资产族估算数量、帧数和单件工时。"
+      severity: blocker
+    - id: QA-007
+      category: rights
+      criterion: "输出未复制具体电影帧、标志或演员肖像。"
+      method: "来源对照与相似度人工审阅。"
+      severity: blocker
+    - id: QA-008
+      category: motion
+      criterion: "常态动效克制，风暴例外不影响文字和输入。"
+      method: "录屏检查同时动效数量、闪光频率与输入延迟。"
+      severity: warning
+  known_risks:
+    - "高细节剧情帧可能漂向照片感，需要强制共享色阶和边缘规则。"
+    - "琥珀色同时承担叙事与交互，若使用过多会失去语义。"
+  open_questions:
+    - "最终字体是否能在目标平台离线打包并覆盖完整中文字形？"
+review:
+  approval_status: draft
+  locked_fields: []
+  validation_notes: []

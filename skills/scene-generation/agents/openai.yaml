@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scene Generation / 可玩场景生成"
+  short_description: "把影视或现实空间转译成可玩的俯视 2D 场景与碰撞数据"
+  default_prompt: "使用 $scene-generation 以 balanced 模式把这个参考场景转译成可玩的俯视 2D 场景、红色碰撞图、碰撞几何和 QA。"

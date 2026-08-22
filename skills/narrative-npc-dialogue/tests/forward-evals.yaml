@@ -1,0 +1,37 @@
+schema_version: "1.0"
+purpose: 验证 narrative-npc-dialogue 的触发边界与关键不变量，不规定具体创作答案
+cases:
+  - id: trigger-npc-player-quest
+    user_request: 根据这些电影角色资料、任务状态和项目对白格式，写一段 NPC 向玩家提出交换条件的对白。
+    should_trigger: true
+    observable_invariants:
+      - 明确选定的电影版本与游戏 canon
+      - 先定义对话前后状态再写台词
+      - 输出匹配项目原生格式
+      - 不复制电影源台词
+  - id: trigger-npc-npc-ambient
+    user_request: 给这两个有旧矛盾的 NPC 写三组会随线索状态变化的环境闲谈。
+    should_trigger: true
+    observable_invariants:
+      - 对话有独立于玩家观察的发生理由
+      - 角色知识与关系影响措辞
+      - 状态变体具有不同进入条件
+  - id: trigger-revision-audit
+    user_request: 这批任务对白太像说明书，请在不改变任务标志和回调的前提下修得更自然。
+    should_trigger: true
+    observable_invariants:
+      - 保留触发、状态效果和回调
+      - 检查回应关系、潜台词与角色区分
+      - 只进行最小兼容修改
+  - id: no-trigger-film-summary
+    user_request: 总结这部电影的完整剧情、人物关系和主题。
+    should_trigger: false
+    reason: 剧情理解或摘要不属于可玩对白创作
+  - id: no-trigger-runtime-chat
+    user_request: 设计一个让 NPC 调用大模型实时聊天的服务器架构和提示词系统。
+    should_trigger: false
+    reason: 运行时 LLM 聊天架构不属于静态叙事对白写作
+  - id: no-trigger-voice-production
+    user_request: 为这些 NPC 选择配音演员并生成带口型的语音文件。
+    should_trigger: false
+    reason: 配音、音频与口型制作不在范围内

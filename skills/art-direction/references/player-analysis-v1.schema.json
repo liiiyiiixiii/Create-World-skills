@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://create-world.local/schemas/player-analysis-v1.schema.json",
+  "title": "Create World Player Test Analysis 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "test_id",
+    "test_round",
+    "cohort_type",
+    "input_response_count",
+    "valid_response_count",
+    "excluded_responses",
+    "eligible_candidates",
+    "candidate_metrics",
+    "leader_candidate_id",
+    "result",
+    "reasons",
+    "response_hashes"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "test_id": { "type": "string", "pattern": "^TEST-[0-9]{3,}$" },
+    "test_round": { "type": "integer", "minimum": 1, "maximum": 2 },
+    "cohort_type": { "enum": ["new", "reused"] },
+    "input_response_count": { "type": "integer", "minimum": 0 },
+    "valid_response_count": { "type": "integer", "minimum": 0 },
+    "excluded_responses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "reason"],
+        "properties": {
+          "file": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "eligible_candidates": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^C-[ABC]$" }
+    },
+    "candidate_metrics": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/candidateMetrics" }
+    },
+    "leader_candidate_id": { "type": ["string", "null"], "pattern": "^C-[ABC]$" },
+    "result": { "enum": ["player_leader", "inconclusive"] },
+    "reasons": { "type": "array", "items": { "type": "string" } },
+    "response_hashes": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    }
+  },
+  "$defs": {
+    "candidateMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "first_choice_count",
+        "borda_points",
+        "appeal_median",
+        "narrative_fit_median",
+        "want_to_play_median",
+        "readability_accuracy",
+        "pairwise_preference"
+      ],
+      "properties": {
+        "first_choice_count": { "type": "integer", "minimum": 0 },
+        "borda_points": { "type": "integer", "minimum": 0 },
+        "appeal_median": { "type": "number", "minimum": 0, "maximum": 7 },
+        "narrative_fit_median": { "type": "number", "minimum": 0, "maximum": 7 },
+        "want_to_play_median": { "type": "number", "minimum": 0, "maximum": 7 },
+        "readability_accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "pairwise_preference": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+schema_version: "1.0"
+purpose: 验证 art-direction 的触发边界和默认模式，不规定具体创意答案
+cases:
+  - id: trigger-film-adaptation
+    user_request: 我想把这部公路电影改成俯视 2D 游戏，但不知道整体画面应该走哪种方向。请给我几套能比较的方案。
+    should_trigger: true
+    expected_mode: visual_decision
+    observable_invariants:
+      - 先建立目标玩家与游戏约束简报
+      - 候选使用同题综合样板而非主观总分
+      - 未取得真实答卷时不声称玩家支持
+  - id: trigger-existing-project
+    user_request: 这个游戏的地图、角色、UI 看起来不像同一个世界。请帮我比较三个整体改造方向，并验证玩家更愿意玩哪个。
+    should_trigger: true
+    expected_mode: visual_decision
+    observable_invariants:
+      - 审阅现有项目资产并提取可定位证据
+      - 三套候选保持相同内容和信息密度
+      - 生成离线匿名盲测材料
+  - id: trigger-novel-mobile
+    user_request: 根据这些小说章节和手机横屏限制，确定游戏的 2D 像素视觉风格；我没有美术总监。
+    should_trigger: true
+    expected_mode: visual_decision
+    observable_invariants:
+      - 原作叙事功能作为硬门槛
+      - 没有实际样板不能进入测试
+  - id: trigger-player-results
+    user_request: 这些是八名目标玩家导出的匿名 JSON，请分析三套美术样板并给出可追溯推荐。
+    should_trigger: true
+    expected_mode: visual_decision
+    observable_invariants:
+      - 不补造无效或缺失答卷
+      - 使用确定性分析器
+      - 区分玩家建议和创作者裁决
+  - id: trigger-production-bible
+    user_request: 我已经选定 style-contract.yaml，请把它展开成完整的角色、场景、UI、镜头和动作 Art Bible。
+    should_trigger: true
+    expected_mode: production_spec
+    observable_invariants:
+      - 显式进入 v1 生产规范兼容模式
+      - 不重新伪造玩家选型
+  - id: no-trigger-image-critique
+    user_request: 点评一下这张插画为什么看起来不够高级。
+    should_trigger: false
+    reason: 普通单图风格点评不构成整体游戏视觉决策
+  - id: no-trigger-character-pack
+    user_request: 把这张正面照片做成四方向 Q 版像素角色精灵表。
+    should_trigger: false
+    reason: 单角色资产生产属于 character-generation
+  - id: no-trigger-batch-assets
+    user_request: 按这个已经确定的画风批量生成二十张房间地图。
+    should_trigger: false
+    reason: 批量最终资产生产不属于方向选型
+  - id: no-trigger-3d
+    user_request: 为这个角色设计 Blender 低模、骨骼和动作绑定。
+    should_trigger: false
+    reason: 3D 建模与绑定不在范围内
+  - id: no-trigger-story-summary
+    user_request: 总结这部电影的完整剧情和人物关系。
+    should_trigger: false
+    reason: 内容理解请求不需要整体美术方向决策

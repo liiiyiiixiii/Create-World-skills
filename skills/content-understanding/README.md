@@ -1,57 +1,78 @@
 # Content Understanding Skill
 
-> 面向游戏改编创作者的线性叙事拆解工具。把剧本、字幕、小说、漫画等材料转成可追溯的叙事档案，并在每个事件节点旁附上克制、忠于原作功能的玩法提示。
+**先把故事读明白，再决定玩家怎样走进去。**  
+**Understand the story first. Then decide how the player steps into it.**
 
-**Status: Beta · Schema: 2.0 · Codex invocation: `$content-understanding`**
+`Beta` · `Schema 2.0` · `$content-understanding`
 
-Content Understanding is a Codex Skill for creators adapting linear stories into games. It produces a traceable narrative record—rather than a loose summary—and adds lightweight, local interaction ideas without designing an entire game system.
+## 为什么做这个 / Why This Exists
 
-## 项目定位
+把电影、小说或剧本改成游戏时，很容易一上来就谈机制，却还没有真正理清故事：哪些事件互为因果，人物为什么改变，哪些物件一路传递，哪些片段虽然不推动主线，却让人记了很多年。
 
-改编前期最难的不是立刻想玩法，而是先回答三个问题：原作发生了什么、为什么发生、哪些体验值得在游戏里保留。本 Skill 位于“读懂原作”和“完整玩法设计”之间，交付一个可供创作者审阅、修改并继续加工的结构化中间层。
+Content Understanding 先做这一步。它把线性叙事整理成一份有出处、能修改、方便讨论的结构稿，再在每个事件旁留下一条简短的玩法提示。结果不是一篇泛泛的剧情摘要，而是一份创作者可以逐条核对、质疑和调整的工作底稿。
 
-- **面向谁**：正在把电影、剧本、小说、漫画或戏剧改编成游戏的个人创作者和小团队。
-- **解决什么**：把线性材料整理为故事脊柱、支撑事件、精选片段、人物变化、物件/信息流、铺垫回收和因果关系。
-- **额外价值**：每个事件节点回答“玩家可以做什么”和“必须保留什么体验”；高价值节点才给出稍详细的 2–4 步交互形态。
-- **不是什么**：不是普通摘要器，也不是自动生成完整游戏的流水线。它不负责核心循环、数值、完整关卡、分支剧情或玩法平衡。
+When adapting a film, novel, or screenplay into a game, it is tempting to jump straight to mechanics. But first you need a firm grasp of the story: what causes what, why a character changes, how an object or a piece of information travels, and which memorable moments deserve to survive even when they do not move the main plot forward.
 
-## 核心原则
+Content Understanding handles that first pass. It turns a linear narrative into a sourced, editable structure, then adds one small interaction idea beside each event. The result is not a generic plot summary. It is a working document that creators can inspect, challenge, and revise together.
 
-- **可追溯**：原作事实必须引用页码、章节、文本行或字幕时间戳。
-- **事实分栏**：原作事实、分析推断和玩法提案分别记录，避免把设计想法伪装成原作内容。
-- **覆盖诚实**：材料覆盖与目标版本可信度分别标记；读完剧本不等于核验最终成片。
-- **保留精彩**：关键剧情、经典片段、有趣片段和用户锁定片段可以并存，非因果片段不会仅因“不推动剧情”而被过滤。
-- **玩法克制**：玩法提示默认保持原节点的结果、状态变化和因果功能，不主动改写剧情。
-- **YAML 优先**：`structure.yaml` 是唯一规范数据源，两个 Markdown 文件由脚本确定性生成。
+## 它会整理什么 / What It Captures
 
-## 输入
+- 故事脊柱与支撑事件；
+- 值得保留的经典、有趣或用户指定片段；
+- 人物目标、关系和状态的变化；
+- 关键物件、地点、信息与意象的流转；
+- 铺垫、回收、因果边和材料缺口；
+- 每个事件的轻量玩法提示：玩家做什么，这段体验要保留什么。
 
-可处理剧本、字幕、小说章节、漫画文字稿、戏剧、PDF/DOCX 提取文本、网页文本、梗概和场景笔记。只有作品名时，Skill 会请求材料或联网授权，不凭模型记忆补齐剧情。
+The Skill records:
 
-电影和音频任务需要字幕、剧本或场景笔记；本 Skill 不直接理解完整原始影音。材料不完整时会输出部分分析并登记缺口。
+- the causal spine and its supporting events;
+- memorable, unusual, or user-marked moments worth keeping;
+- changes in character goals, relationships, and state;
+- the movement of important objects, places, information, and motifs;
+- setups, payoffs, causal links, and gaps in the source material;
+- a lightweight interaction hint for every event: what the player might do, and what the moment must preserve.
 
-## 输出
+普通节点只给一句简明建议。只有同时具备信息发现、关系冲突、时间压力、风险变化、情绪峰值等多项价值的节点，才会得到稍完整的 2–4 步交互构想。
+
+Ordinary nodes receive one concise suggestion. A node gets a fuller two-to-four-step interaction sketch only when it carries several kinds of value, such as discovery, conflict, pressure, changing risk, or an emotional peak.
+
+## 它不做什么 / What It Does Not Do
+
+它不会替你设计整部游戏，也不会擅自改写原作结局。核心循环、数值、关卡结构、剧情分支和玩法平衡，应该留给后续的 Gameplay Design 或改编设计工作。
+
+It does not design the whole game, and it does not quietly rewrite the ending. Core loops, numbers, level structure, branching storylines, and balance belong to a later gameplay or adaptation design stage.
+
+## 输入与材料边界 / Inputs and Source Boundaries
+
+可用材料包括剧本、字幕、小说章节、漫画文字稿、戏剧、PDF/DOCX 提取文本、网页文本、梗概和场景笔记。只有作品名时，Skill 会先请求材料或联网授权，不会靠模型记忆补完未知剧情。
+
+Supported inputs include screenplays, subtitles, novel chapters, comic transcripts, plays, extracted PDF/DOCX text, web text, synopses, and scene notes. If you provide only a title, the Skill asks for source material or permission to research it instead of filling gaps from memory.
+
+电影和音频需要字幕、剧本或场景笔记。本 Skill 不直接观看完整电影，也不直接分析原始音频。材料不完整没有关系：结果会明确写成部分分析，并把缺失范围留下来。
+
+Film and audio work requires subtitles, a screenplay, or scene notes. The Skill does not directly watch a full film or analyse raw audio. Incomplete material is fine: the output is marked as partial, with the missing range recorded openly.
+
+## 输出 / Output
 
 ```text
-structured-narrative/<作品-slug>/
-|-- overview.md       一页式入口：故事脊柱、高价值候选、精选片段和缺口
-|-- structure.md      完整、适合人工审阅的叙事结构
-`-- structure.yaml    唯一规范数据源
+structured-narrative/<work-slug>/
+|-- overview.md       一页概览 / one-page overview
+|-- structure.md      完整审阅稿 / full review document
+`-- structure.yaml    唯一数据源 / canonical source
 ```
 
-明确修订既有结果时，还会追加：
+`structure.yaml` 是唯一规范数据源；两个 Markdown 文件都由它确定性生成。明确修订旧结果时，还会写入 `CHANGELOG.md` 和 `revisions/r####.yaml`。
 
-```text
-|-- CHANGELOG.md
-`-- revisions/
-    `-- r####.yaml
-```
+`structure.yaml` is the canonical source. Both Markdown files are rendered from it deterministically. An explicit revision also writes `CHANGELOG.md` and `revisions/r####.yaml`.
 
-Schema 2.0 的完整字段说明见 [references/schema.md](references/schema.md)，JSON Schema 位于 [references/structure-v2.schema.json](references/structure-v2.schema.json)。
+字段说明见 [references/schema.md](references/schema.md)，机器可读规则见 [references/structure-v2.schema.json](references/structure-v2.schema.json)。  
+See [references/schema.md](references/schema.md) for the field guide and [references/structure-v2.schema.json](references/structure-v2.schema.json) for the machine-readable rules.
 
-## 快速开始
+## 快速开始 / Quick Start
 
-从 Create World Skills 仓库根目录运行：
+在 Create World Skills 仓库根目录运行：  
+Run these commands from the root of the Create World Skills repository:
 
 ```shell
 python -m pip install -r skills/content-understanding/requirements.txt
@@ -60,17 +81,27 @@ python skills/content-understanding/scripts/install_skill.py --dry-run
 python skills/content-understanding/scripts/install_skill.py --update
 ```
 
-安装脚本默认同步到 `$CODEX_HOME/skills/content-understanding`；未设置 `CODEX_HOME` 时使用 `~/.codex/skills/content-understanding`。它只添加或更新源码中存在的文件，不会删除目标目录中的额外文件。
+安装脚本默认同步到 `$CODEX_HOME/skills/content-understanding`；如果没有设置 `CODEX_HOME`，则使用 `~/.codex/skills/content-understanding`。它只添加或更新文件，不会删除目标目录里的额外内容。
 
-安装后在 Codex 中调用：
+By default, the installer syncs to `$CODEX_HOME/skills/content-understanding`, or `~/.codex/skills/content-understanding` when `CODEX_HOME` is not set. It adds and updates files, but never deletes extra files from the target directory.
+
+安装后，在 Codex 中这样调用：  
+After installation, invoke it in Codex like this:
 
 ```text
-$content-understanding 请整理我提供的剧本，并为每个事件节点补充简短玩法提示。
+$content-understanding 请整理我提供的剧本，并为每个事件补充简短玩法提示。
 ```
 
-如果允许联网，请在请求中明确说明；如果某个片段必须保留，也请直接标记。
+需要联网时，请明确授权。某个片段一定要保留时，也可以直接说出来。  
+Say so explicitly if web research is allowed, and mark any scene that must be kept.
 
-## 校验与渲染
+## 审阅与修改 / Review and Revision
+
+每个节点和片段都有稳定 ID。你可以按 ID 锁定、排除、恢复、合并或拆分内容，也可以调整主干层级、玩法优先级和来源。锁定项不会被自动删除；排除项仍会留在 YAML 的审计记录里。
+
+Every node and fragment has a stable ID. You can lock, exclude, restore, merge, or split items by ID, as well as change spine status, interaction priority, or sources. Locked items are never removed automatically, and excluded items remain in the YAML audit trail.
+
+## 校验与开发 / Validation and Development
 
 ```shell
 python skills/content-understanding/scripts/validate_structure.py path/to/structure.yaml
@@ -78,58 +109,39 @@ python skills/content-understanding/scripts/render_structure.py path/to/structur
 python skills/content-understanding/scripts/archive_revision.py path/to/structure.yaml
 ```
 
-校验器检查 Schema、稳定 ID、外键、覆盖状态、主干连通性、锁定项、外部评价来源和玩法提示完整性。未通过校验的 YAML 不应渲染或交付。
-
-## 人工审阅
-
-用户可以直接按稳定 ID：
-
-- 锁定、排除或恢复精选片段；
-- 合并、拆分节点，或切换 `spine/support`；
-- 提升或降低玩法候选优先级；
-- 接受、修改或删除玩法提示；
-- 补充材料、来源定位或目标版本核验。
-
-锁定项不会被自动删除；被排除的内容仍保留在 YAML 审计记录中。
-
-## 仓库结构
-
-```text
-content-understanding/
-|-- SKILL.md                         Codex 入口与执行约束
-|-- README.md                        产品定位、使用和维护说明
-|-- agents/openai.yaml               Codex UI 元数据
-|-- references/
-|   |-- method.md                    内容筛选与分析方法
-|   |-- schema.md                    Schema 2.0 字段契约
-|   |-- structure-v2.schema.json     机器可读 JSON Schema
-|   `-- example.md                   原创短篇示例说明
-|-- scripts/
-|   |-- validate_structure.py        结构与语义校验
-|   |-- render_structure.py          YAML → Markdown
-|   |-- archive_revision.py          修订快照与变更记录
-|   `-- install_skill.py             Codex Skills 单向同步
-`-- tests/                           unittest 与原创 fixture
-```
-
-## Beta 范围与后续边界
-
-当前 Beta 已覆盖叙事结构化、逐节点轻量玩法提示、确定性渲染、修订审计和自动校验。可视化关系图、多人协作、原始影音分析，以及完整的 Gameplay Design 不在当前版本范围内。
-
-Schema 2.0 不自动迁移 1.x 历史产物。升级旧分析时，请保留原目录并创建新的 2.0 结果。
-
-## 参与贡献
-
-提交修改前请运行：
+提交修改前，请运行测试和严格校验：  
+Before submitting a change, run the tests and strict validation:
 
 ```shell
 python -m unittest discover -s skills/content-understanding/tests -v
 python skills/content-understanding/scripts/validate_structure.py skills/content-understanding/tests/fixtures/fog-harbor-v2.yaml --warnings-as-errors
 ```
 
-新案例和测试材料必须是原创、公共领域或已获授权内容。请勿提交用户剧本、字幕、小说正文、联网抓取的受版权保护内容、分析产物、缓存或本机路径。
+新测试材料必须是原创、公共领域或已获授权内容。请勿提交用户剧本、字幕、小说正文、抓取的版权材料、分析产物、缓存或本机路径。
 
-## 许可与内容边界
+New fixtures must be original, public-domain, or properly licensed. Do not commit user scripts, subtitles, novel text, scraped copyrighted material, generated analyses, caches, or local machine paths.
 
-本 Skill 的代码、文档与原创测试材料遵循仓库根目录的 [MIT License](../../LICENSE)。用户提供的叙事材料及其派生分析结果不会因为使用本 Skill 而自动采用 MIT License。
+## 项目结构 / Project Structure
+
+```text
+content-understanding/
+|-- SKILL.md                       Codex instructions
+|-- README.md                      project guide
+|-- agents/openai.yaml             Codex UI metadata
+|-- references/                    method, schema, and original example
+|-- scripts/                       validation, rendering, revision, install
+`-- tests/                         unittest suite and original fixture
+```
+
+## Beta 范围 / Beta Scope
+
+当前版本已经覆盖叙事拆解、逐节点玩法提示、确定性渲染、修订记录和自动校验。关系图可视化、多人协作、完整影音理解和完整玩法设计暂不在范围内。Schema 2.0 不会自动迁移 1.x 产物。
+
+The current Beta covers narrative breakdown, per-node interaction hints, deterministic rendering, revision history, and automated validation. Relationship visualisation, multi-user collaboration, full audiovisual understanding, and full gameplay design are out of scope for now. Schema 2.0 does not automatically migrate 1.x outputs.
+
+## 许可与内容边界 / License and Content Boundaries
+
+代码、文档和原创测试材料遵循仓库根目录的 [MIT License](../../LICENSE)。用户提供的材料和基于这些材料生成的结果，不会因为使用本 Skill 而自动采用 MIT License。
+
+Code, documentation, and original test material follow the repository's [MIT License](../../LICENSE). User-provided source material and outputs derived from it do not become MIT-licensed simply because this Skill was used.
 
